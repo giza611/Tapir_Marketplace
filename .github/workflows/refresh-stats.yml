@@ -1,8 +1,13 @@
 name: Refresh stats
 
-# Pulls download counts and discussion activity once a day, commits the result,
-# and asks Vercel to rebuild. This is what lets a fully static site show live-ish
-# numbers without a database or a single runtime API call.
+# Pulls the forum index, download counts and discussion activity once a day,
+# commits the result, and asks Vercel to rebuild. This is what lets a fully
+# static site show live-ish data without a database or a runtime API call.
+#
+# It is also why the deployment needs no GitHub credential of its own. The token
+# below is injected by Actions, scoped to this repository and rotated every run.
+# A Personal Access Token on the build host would work too — until it expired,
+# at which point the forum would quietly stop updating with nobody watching.
 #
 # VERCEL_DEPLOY_HOOK is optional: pushing to main already triggers a Vercel
 # build through the GitHub integration. The hook only matters if the repo is
@@ -35,7 +40,7 @@ jobs:
 
       - run: npm ci
 
-      - name: Collect stats
+      - name: Collect forum index and stats
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REPO_OWNER: ${{ github.repository_owner }}
@@ -45,15 +50,15 @@ jobs:
       - name: Commit if changed
         id: commit
         run: |
-          if git diff --quiet -- lib/stats.generated.json; then
+          if git diff --quiet -- lib/stats.generated.json lib/discussions.generated.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Stats unchanged; skipping commit."
+            echo "Nothing changed; skipping commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/stats.generated.json
-          git commit -m "chore: refresh listing stats"
+          git add lib/stats.generated.json lib/discussions.generated.json
+          git commit -m "chore: refresh forum index and listing stats"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 

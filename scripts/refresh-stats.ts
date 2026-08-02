@@ -1,10 +1,16 @@
 /**
- * Collects download counts and discussion activity into lib/stats.generated.json.
+ * Collects everything the site needs from the GitHub API and writes it to disk:
  *
- * Run daily by .github/workflows/refresh-stats.yml, which commits the result
- * and triggers a rebuild. That is why the public site can show real numbers
- * while still being entirely static: the numbers are baked in, refreshed on a
- * schedule, and cost nothing per visitor.
+ *   lib/stats.generated.json        download counts, reactions, comment counts
+ *   lib/discussions.generated.json  the forum index
+ *
+ * Run daily by .github/workflows/refresh-stats.yml, which commits both files
+ * and triggers a rebuild.
+ *
+ * This is why the site needs no API credential of its own. Inside Actions the
+ * token is injected automatically, scoped to this repository and rotated every
+ * run — unlike a Personal Access Token, which expires and would eventually
+ * break the forum on a project nobody is watching.
  *
  *   GITHUB_TOKEN=... npx tsx scripts/refresh-stats.ts
  *
@@ -18,18 +24,20 @@ import path from 'node:path'
 
 import { Octokit } from '@octokit/rest'
 
+import { fetchDiscussionsFromApi, type Discussion } from '../lib/discussions'
 import { EMPTY_STATS, parseListingJson, validateListing, type ListingStats } from '../lib/schema'
 
 const ROOT = process.cwd()
 const LISTINGS_DIR = path.join(ROOT, 'listings')
-const OUTPUT_FILE = path.join(ROOT, 'lib', 'stats.generated.json')
+const STATS_FILE = path.join(ROOT, 'lib', 'stats.generated.json')
+const DISCUSSIONS_FILE = path.join(ROOT, 'lib', 'discussions.generated.json')
 
 const REPO_OWNER = process.env.REPO_OWNER ?? 'giza611'
 const REPO_NAME = process.env.REPO_NAME ?? 'Tapir_Marketplace'
 
 const token = process.env.GITHUB_TOKEN
 if (!token) {
-  console.error('GITHUB_TOKEN is required. Without it the API rate limit is 60 requests/hour.')
+  console.error('GITHUB_TOKEN is required. Inside GitHub Actions, pass ${{ github.token }}.')
   process.exit(1)
 }
 
@@ -40,7 +48,7 @@ type ReleaseAssetRef = { owner: string; repo: string; tag: string; asset: string
 /**
  * Recognises a GitHub release asset URL, the only download shape where an
  * exact count is available. Plain repository links have no download metric,
- * so those listings simply report zero rather than a fabricated number.
+ * so those listings report zero rather than a fabricated number.
  */
 function parseReleaseAsset(url: string): ReleaseAssetRef | null {
   const match = url.match(
@@ -77,89 +85,54 @@ async function countDownloads(urls: string[]): Promise<number | null> {
   return anySucceeded ? total : null
 }
 
-type DiscussionSummary = { reactions: number; comments: number }
-
-/**
- * giscus is configured with `data-mapping="specific"`, so each listing's
- * discussion is titled exactly `listing:<slug>`. One query pulls the whole
- * category; matching happens locally.
- */
-async function fetchDiscussions(): Promise<Map<string, DiscussionSummary> | null> {
-  const query = `
-    query($owner: String!, $repo: String!, $cursor: String) {
-      repository(owner: $owner, name: $repo) {
-        discussions(first: 100, after: $cursor) {
-          pageInfo { hasNextPage endCursor }
-          nodes {
-            title
-            category { name }
-            reactions { totalCount }
-            comments { totalCount }
-          }
-        }
-      }
-    }
-  `
-
-  const summaries = new Map<string, DiscussionSummary>()
-  let cursor: string | null = null
-
+function readJson<T>(file: string, fallback: T): T {
   try {
-    for (;;) {
-      const response: {
-        repository: {
-          discussions: {
-            pageInfo: { hasNextPage: boolean; endCursor: string | null }
-            nodes: {
-              title: string
-              category: { name: string } | null
-              reactions: { totalCount: number }
-              comments: { totalCount: number }
-            }[]
-          }
-        }
-      } = await octokit.graphql(query, { owner: REPO_OWNER, repo: REPO_NAME, cursor })
-
-      for (const node of response.repository.discussions.nodes) {
-        // The `listing:` title prefix is what identifies a listing's thread, so
-        // filtering by category as well would only add a way to misconfigure it.
-        if (!node.title.startsWith('listing:')) continue
-        summaries.set(node.title.slice('listing:'.length), {
-          reactions: node.reactions.totalCount,
-          comments: node.comments.totalCount,
-        })
-      }
-
-      if (!response.repository.discussions.pageInfo.hasNextPage) break
-      cursor = response.repository.discussions.pageInfo.endCursor
-    }
-  } catch (error) {
-    // Discussions not enabled yet is the common case on a fresh repo.
-    console.warn(`Could not read discussions: ${(error as Error).message}`)
-    return null
+    return JSON.parse(fs.readFileSync(file, 'utf8')) as T
+  } catch {
+    return fallback
   }
-
-  return summaries
 }
 
-function readPreviousStats(): Record<string, ListingStats> {
-  try {
-    return JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf8')) as Record<string, ListingStats>
-  } catch {
-    return {}
-  }
+/** Writes only when the content actually changed, so the daily job produces no empty commits. */
+function writeIfChanged(file: string, value: unknown): boolean {
+  const serialised = `${JSON.stringify(value, null, 2)}\n`
+  if (fs.existsSync(file) && fs.readFileSync(file, 'utf8') === serialised) return false
+  fs.writeFileSync(file, serialised)
+  return true
 }
 
 async function main() {
+  // ---- Forum index -------------------------------------------------------
+  let discussions: Discussion[] | null = null
+  try {
+    discussions = await fetchDiscussionsFromApi(token!, REPO_OWNER, REPO_NAME)
+    const changed = writeIfChanged(DISCUSSIONS_FILE, discussions)
+    console.log(
+      `${changed ? 'Updated' : 'No change to'} forum index (${discussions.length} thread(s))`,
+    )
+  } catch (error) {
+    // Discussions not enabled yet is the normal case on a fresh repository.
+    console.warn(`Could not read discussions: ${(error as Error).message}`)
+    // Seed an empty index so the forum page renders its "no threads" state
+    // rather than the setup prompt once Discussions is switched on.
+    if (!fs.existsSync(DISCUSSIONS_FILE)) writeIfChanged(DISCUSSIONS_FILE, [])
+  }
+
+  // ---- Per-listing stats -------------------------------------------------
   if (!fs.existsSync(LISTINGS_DIR)) {
-    console.log('No listings/ directory; nothing to refresh.')
+    console.log('No listings/ directory; nothing further to refresh.')
     return
   }
 
-  const previous = readPreviousStats()
-  const discussions = await fetchDiscussions()
-  const next: Record<string, ListingStats> = {}
+  const previous = readJson<Record<string, ListingStats>>(STATS_FILE, {})
+  const bySlug = new Map<string, Discussion>()
+  for (const discussion of discussions ?? []) {
+    // The `listing:` title prefix is what identifies a listing's thread, which
+    // is why this does not also filter by discussion category.
+    if (discussion.listingSlug) bySlug.set(discussion.listingSlug, discussion)
+  }
 
+  const next: Record<string, ListingStats> = {}
   const slugs = fs
     .readdirSync(LISTINGS_DIR, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
@@ -179,22 +152,17 @@ async function main() {
     }
 
     const downloads = await countDownloads(downloadUrls)
-    const discussion = discussions?.get(slug)
+    const thread = bySlug.get(slug)
 
     next[slug] = {
       downloads: downloads ?? previousStats.downloads,
-      reactions: discussion?.reactions ?? previousStats.reactions,
-      commentCount: discussion?.comments ?? previousStats.commentCount,
+      reactions: thread?.reactions ?? previousStats.reactions,
+      commentCount: thread?.comments ?? previousStats.commentCount,
     }
   }
 
-  const serialised = `${JSON.stringify(next, null, 2)}\n`
-  const unchanged = fs.existsSync(OUTPUT_FILE) && fs.readFileSync(OUTPUT_FILE, 'utf8') === serialised
-
-  fs.writeFileSync(OUTPUT_FILE, serialised)
-  console.log(
-    `${unchanged ? 'No change to' : 'Updated'} stats for ${slugs.length} listing(s) → lib/stats.generated.json`,
-  )
+  const changed = writeIfChanged(STATS_FILE, next)
+  console.log(`${changed ? 'Updated' : 'No change to'} stats for ${slugs.length} listing(s)`)
 }
 
 main().catch((error) => {

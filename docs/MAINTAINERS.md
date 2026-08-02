@@ -30,9 +30,15 @@ If the repository name or owner changes, set `NEXT_PUBLIC_REPO_OWNER` and
       repository — without it the comment box loads but cannot post
 - [ ] `needs-review` label exists — CI applies it to submissions that fail
 - [ ] giscus IDs generated at <https://giscus.app> and set in the deployment
-- [ ] `GITHUB_TOKEN` set on the build, so `/forum` and download counts populate
 - [ ] Optionally, a Vercel Deploy Hook stored as the repository variable
       `VERCEL_DEPLOY_HOOK`, used by the nightly stats job
+
+**Do not create a Personal Access Token for the deployment.** The forum index
+and download counts come from the daily Action, which authenticates with the
+token GitHub Actions provides automatically, and commits the results to
+`lib/*.generated.json`. The site build reads those files. A PAT would work too,
+right up until it expired — and on a project with no maintainer, a credential
+with an expiry date is a scheduled outage nobody will be watching for.
 
 ## What runs on its own
 
