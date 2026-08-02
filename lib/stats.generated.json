@@ -1,16 +1,26 @@
 {
+  "archisum": {
+    "downloads": 0,
+    "reactions": 0,
+    "commentCount": 0
+  },
+  "archixml": {
+    "downloads": 0,
+    "reactions": 0,
+    "commentCount": 0
+  },
   "batch-layout-publisher": {
-    "downloads": 26,
+    "downloads": 28,
     "reactions": 0,
     "commentCount": 0
   },
   "element-property-exporter": {
-    "downloads": 46,
+    "downloads": 52,
     "reactions": 0,
     "commentCount": 0
   },
   "zone-area-auditor": {
-    "downloads": 7,
+    "downloads": 8,
     "reactions": 0,
     "commentCount": 0
   }
