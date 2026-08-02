@@ -1,26 +1,233 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Design tokens.
+ *
+ * Every colour, radius and shadow in the app resolves back to a variable
+ * declared here. When the Claude Design mockup lands, restyling the site means
+ * replacing values in this block — not touching component files.
+ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  /* Surfaces, from furthest back to closest to the reader */
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f2;
+  --surface-3: #ebebe8;
+
+  --border: #e2e2de;
+  --border-strong: #cfcfc9;
+
+  --text: #171a17;
+  --text-muted: #63665f;
+  --text-subtle: #8b8e86;
+
+  /* Teal reads technical without the default-bootstrap feel of blue. */
+  --accent: #0f766e;
+  --accent-hover: #0c5f58;
+  --accent-fg: #ffffff;
+  --accent-subtle: #e6f2f0;
+  --accent-border: #a7d3cd;
+
+  /* Reserved for paid and donation states, so money never reads as "primary". */
+  --highlight: #b45309;
+  --highlight-subtle: #fdf3e7;
+  --highlight-border: #edd0a8;
+
+  --danger: #b42318;
+  --danger-subtle: #fdeceb;
+
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1.25rem;
+
+  --shadow-sm: 0 1px 2px rgb(23 26 23 / 0.05);
+  --shadow: 0 1px 3px rgb(23 26 23 / 0.07), 0 8px 24px -12px rgb(23 26 23 / 0.12);
+  --shadow-lg: 0 2px 6px rgb(23 26 23 / 0.06), 0 24px 48px -20px rgb(23 26 23 / 0.22);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0c0e0c;
+    --surface: #141714;
+    --surface-2: #1b1f1b;
+    --surface-3: #242924;
+
+    --border: #262b26;
+    --border-strong: #39403a;
+
+    --text: #ecefea;
+    --text-muted: #a0a69d;
+    --text-subtle: #767d74;
+
+    --accent: #2dd4bf;
+    --accent-hover: #5eead4;
+    --accent-fg: #06231f;
+    --accent-subtle: #12312d;
+    --accent-border: #1d5a52;
+
+    --highlight: #fbbf24;
+    --highlight-subtle: #2e2410;
+    --highlight-border: #5c4715;
+
+    --danger: #fda29b;
+    --danger-subtle: #341714;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow: 0 1px 3px rgb(0 0 0 / 0.5), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.5), 0 24px 48px -20px rgb(0 0 0 / 0.8);
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+
+  --color-highlight: var(--highlight);
+  --color-highlight-subtle: var(--highlight-subtle);
+  --color-highlight-border: var(--highlight-border);
+
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+
+  --radius-card: var(--radius);
+  --radius-pill: 9999px;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Keyboard focus must stay obvious. This site is browsed by people evaluating
+   code they are about to run; hiding focus to look tidier is not a trade worth
+   making. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Markdown rendered from a listing's README.md.
+ *
+ * Scoped to .prose-listing so contributor-authored content can never restyle
+ * the surrounding page. react-markdown is configured without rehype-raw, so
+ * raw HTML in a README is escaped rather than rendered.
+ */
+.prose-listing {
+  color: var(--text);
+  line-height: 1.7;
+}
+.prose-listing > * + * {
+  margin-top: 1rem;
+}
+.prose-listing h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+}
+.prose-listing h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+.prose-listing a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-listing ul,
+.prose-listing ol {
+  padding-left: 1.25rem;
+}
+.prose-listing ul {
+  list-style: disc;
+}
+.prose-listing ol {
+  list-style: decimal;
+}
+.prose-listing li + li {
+  margin-top: 0.375rem;
+}
+.prose-listing code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose-listing pre {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose-listing pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8125rem;
+}
+.prose-listing blockquote {
+  border-left: 3px solid var(--accent-border);
+  background: var(--accent-subtle);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-muted);
+}
+.prose-listing blockquote > * + * {
+  margin-top: 0.5rem;
+}
+.prose-listing table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.prose-listing th,
+.prose-listing td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose-listing th {
+  background: var(--surface-2);
+  font-weight: 600;
+}
+.prose-listing img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
 }

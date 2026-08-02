@@ -1,0 +1,63 @@
+name: Refresh stats
+
+# Pulls download counts and discussion activity once a day, commits the result,
+# and asks Vercel to rebuild. This is what lets a fully static site show live-ish
+# numbers without a database or a single runtime API call.
+#
+# VERCEL_DEPLOY_HOOK is optional: pushing to main already triggers a Vercel
+# build through the GitHub integration. The hook only matters if the repo is
+# later deployed somewhere that does not watch pushes.
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-stats
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Collect stats
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          GISCUS_CATEGORY: Listings
+        run: npx tsx scripts/refresh-stats.ts
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- lib/stats.generated.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Stats unchanged; skipping commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/stats.generated.json
+          git commit -m "chore: refresh listing stats"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger rebuild
+        if: steps.commit.outputs.changed == 'true' && vars.VERCEL_DEPLOY_HOOK != ''
+        run: curl -fsS -X POST "${{ vars.VERCEL_DEPLOY_HOOK }}"

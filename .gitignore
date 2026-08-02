@@ -32,6 +32,15 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# Derived: scripts/sync-media.mjs mirrors listings/*/media/ here so Next can
+# serve it. Committing it would store every screenshot in git twice.
+/public/listings/
+
+# Scratch space used by the CI gatekeeper when it materialises a fork's files
+/.base/
+/.pr-content/
 
 # vercel
 .vercel

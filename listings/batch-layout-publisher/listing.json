@@ -1,0 +1,31 @@
+{
+  "slug": "batch-layout-publisher",
+  "name": "Batch Layout Publisher",
+  "summary": "Publishes selected layout subsets to PDF in one pass, naming each file from its layout ID and revision.",
+  "category": "documentation-layouts",
+  "type": "python-script",
+  "tags": ["publishing", "pdf", "layouts", "revisions", "batch"],
+  "author": {
+    "name": "Tapir Marketplace (starter example)",
+    "website": "https://enzyme-apd.github.io/tapir-archicad-automation/"
+  },
+  "authorGithub": "giza611",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "releasedAt": "2026-07-28",
+      "changelog": "Initial starter example published with the marketplace.",
+      "downloadUrl": "https://github.com/ENZYME-APD/tapir-archicad-automation",
+      "archicadVersions": ["27", "28"],
+      "minTapirVersion": "1.1.0"
+    }
+  ],
+  "media": [],
+  "repositoryUrl": "https://github.com/ENZYME-APD/tapir-archicad-automation",
+  "license": "MIT",
+  "pricing": {
+    "model": "free"
+  },
+  "createdAt": "2026-07-28",
+  "updatedAt": "2026-07-28"
+}

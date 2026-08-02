@@ -1,0 +1,185 @@
+name: Validate listing
+
+# ---------------------------------------------------------------------------
+# THIS FILE IS THE MAINTAINER.
+#
+# Nobody staffs a review queue for this marketplace, so this workflow decides
+# whether a contributor's pull request may merge itself. Read the security note
+# before changing anything here.
+#
+# SECURITY — why `pull_request_target` and what it costs
+# ------------------------------------------------------
+# Auto-merging a pull request needs a write-scoped token. Workflows triggered by
+# `pull_request` from a fork only get a READ token, so they cannot merge. The
+# `pull_request_target` trigger runs in the context of the BASE repository and
+# does get write access — which is exactly why it is dangerous:
+#
+#   * It executes the workflow definition from the BASE branch (trusted). Good.
+#   * But if it ever CHECKS OUT and RUNS code from the fork, that fork code runs
+#     with the base repo's write token and secrets. That is a full repository
+#     takeover in one pull request.
+#
+# The invariant this file maintains:
+#
+#   Fork content is only ever read as DATA. It is never imported, executed,
+#   installed, or used to pick what runs.
+#
+# Concretely: `npm ci` runs against the BASE package.json before any fork
+# content is fetched, and the fork checkout is restricted to `listings/` paths
+# after we have already proved no other path changed. Never add a step that
+# runs a script, a lifecycle hook, or a config file coming from the fork.
+# ---------------------------------------------------------------------------
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: validate-listing-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # Base branch only. This is trusted code: our scripts, our schema, our
+      # package.json. The fork's version of these files is never used.
+      - name: Check out trusted base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      # Snapshot the published state before we overlay the PR's version, so the
+      # validator can compare "who owns this listing today" against "who is
+      # trying to change it".
+      - name: Snapshot published listings
+        run: |
+          mkdir -p .base
+          if [ -d listings ]; then cp -r listings .base/listings; else mkdir -p .base/listings; fi
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      # Runs against the BASE lockfile, before any fork content exists on disk.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Classify changed files
+        id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh api --paginate "repos/${{ github.repository }}/pulls/$PR/files" \
+            --jq '.[].filename' > changed.txt
+          echo "Changed files:"
+          sed 's/^/  /' changed.txt
+
+          touched_listings=false
+          touched_other=false
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            case "$file" in
+              listings/*) touched_listings=true ;;
+              *)          touched_other=true ;;
+            esac
+          done < changed.txt
+
+          echo "touched_listings=$touched_listings" >> "$GITHUB_OUTPUT"
+          echo "touched_other=$touched_other" >> "$GITHUB_OUTPUT"
+
+          # Second field of "listings/<slug>/..." is the listing folder.
+          slugs=$(grep '^listings/' changed.txt | cut -d/ -f2 | sort -u | paste -sd, -)
+          echo "slugs=$slugs" >> "$GITHUB_OUTPUT"
+          echo "Affected listings: ${slugs:-none}"
+
+      # A pull request that edits a listing AND touches anything else is the
+      # shape an attack takes: hide a workflow or dependency change behind a
+      # legitimate-looking submission. Refuse to reason about it at all.
+      - name: Refuse mixed pull requests
+        if: steps.changes.outputs.touched_listings == 'true' && steps.changes.outputs.touched_other == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$PR" --add-label needs-review
+          gh pr comment "$PR" --body "$(cat <<'EOF'
+          **This pull request cannot be merged automatically.**
+
+          It changes files inside `listings/` *and* files elsewhere in the repository.
+          Listing submissions must touch only their own listing folder.
+
+          Please split this into two pull requests: one for the listing, one for the
+          code change. A maintainer will review the code change.
+          EOF
+          )"
+          echo "::error::Pull request mixes listing content with repository code."
+          exit 1
+
+      # An ordinary code contribution. Nothing to validate, nothing to auto-merge.
+      - name: Skip — no listing changes
+        if: steps.changes.outputs.touched_listings != 'true'
+        run: echo "No listing files changed; leaving this pull request for a human."
+
+      # Fork content enters the workspace here, and ONLY under listings/.
+      # `git checkout <ref> -- listings` writes files; it does not run anything.
+      - name: Materialise submitted listings
+        if: steps.changes.outputs.touched_listings == 'true'
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --depth 1 origin "refs/pull/$PR/head:pr-head"
+          rm -rf listings
+          # Fails when the PR deletes every listing, which is a legitimate state.
+          git checkout pr-head -- listings || mkdir -p listings
+
+      - name: Validate submission
+        if: steps.changes.outputs.touched_listings == 'true'
+        id: validate
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npx tsx scripts/validate-listings.ts \
+            --root . \
+            --base-root .base \
+            --slugs "${{ steps.changes.outputs.slugs }}" \
+            --pr-author "${{ github.event.pull_request.user.login }}" \
+            2>&1 | tee validation.log
+
+      - name: Report failure
+        if: steps.changes.outputs.touched_listings == 'true' && steps.validate.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo "**This submission needs a change before it can be published.**"
+            echo
+            echo '```'
+            cat validation.log
+            echo '```'
+            echo
+            echo "Push a fix to this branch and the checks will run again."
+          } > comment.md
+          gh pr comment "$PR" --body-file comment.md
+          gh pr edit "$PR" --add-label needs-review
+          exit 1
+
+      - name: Auto-merge
+        if: steps.changes.outputs.touched_listings == 'true' && steps.validate.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$PR" --remove-label needs-review || true
+          gh pr comment "$PR" --body "Validated automatically — merging. Your listing will be live once the site rebuilds, usually within a couple of minutes. Thanks for contributing."
+          gh pr merge "$PR" --squash

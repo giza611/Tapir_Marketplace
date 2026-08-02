@@ -1,0 +1,10 @@
+# Contributors publish from Windows, macOS and Linux, and CI reads these files
+# on Linux. Normalise to LF in the repository so a line-ending flip never shows
+# up as a spurious diff on someone else's listing.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
