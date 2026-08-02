@@ -1,0 +1,46 @@
+{
+  "slug": "archisum",
+  "name": "archiSum",
+  "summary": "sum areas in residential projects",
+  "category": "documentation-layouts",
+  "type": "addon",
+  "tags": [
+    "schedules",
+    "properties"
+  ],
+  "author": {
+    "name": "architools",
+    "company": "architools",
+    "email": "support@architools.net",
+    "website": "https://www.architools.net/addons/archisum"
+  },
+  "authorGithub": "giza611",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "releasedAt": "2026-08-02",
+      "changelog": "added support for",
+      "downloadUrl": "https://www.architools.net/addons/archisum",
+      "archicadVersions": [
+        "27",
+        "28",
+        "29"
+      ],
+      "minTapirVersion": "1.0.0"
+    }
+  ],
+  "media": [
+    "media/archixml-attribute-editor-v0-ik7if259tzfh1.webp",
+    "media/archixml-attribute-editor-v0-oqjpg159tzfh1.webp",
+    "media/archixml-attribute-editor-v0-tgy3x159tzfh1.webp",
+    "media/archixml-attribute-editor-v0-xcp1c159tzfh1.webp"
+  ],
+  "videoUrl": "https://youtu.be/5O1qr0whAQo",
+  "homepageUrl": "https://www.architools.net/addons/archisum",
+  "license": "MIT",
+  "pricing": {
+    "model": "free"
+  },
+  "createdAt": "2026-08-02",
+  "updatedAt": "2026-08-02"
+}
