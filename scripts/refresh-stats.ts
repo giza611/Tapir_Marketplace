@@ -18,7 +18,7 @@ import path from 'node:path'
 
 import { Octokit } from '@octokit/rest'
 
-import { EMPTY_STATS, validateListing, type ListingStats } from '../lib/schema'
+import { EMPTY_STATS, parseListingJson, validateListing, type ListingStats } from '../lib/schema'
 
 const ROOT = process.cwd()
 const LISTINGS_DIR = path.join(ROOT, 'listings')
@@ -171,7 +171,7 @@ async function main() {
     let downloadUrls: string[] = []
     try {
       const parsed = validateListing(
-        JSON.parse(fs.readFileSync(path.join(LISTINGS_DIR, slug, 'listing.json'), 'utf8')),
+        parseListingJson(fs.readFileSync(path.join(LISTINGS_DIR, slug, 'listing.json'), 'utf8')),
       )
       if (parsed.ok) downloadUrls = parsed.listing.versions.map((v) => v.downloadUrl)
     } catch {

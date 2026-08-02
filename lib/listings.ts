@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import {
   EMPTY_STATS,
+  parseListingJson,
   sortVersions,
   validateListing,
   type ListingStats,
@@ -38,7 +39,7 @@ function readListing(slug: string, stats: Record<string, ListingStats>): Resolve
 
   let raw: unknown
   try {
-    raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'))
+    raw = parseListingJson(fs.readFileSync(jsonPath, 'utf8'))
   } catch (error) {
     throw new Error(
       `listings/${slug}/listing.json is missing or is not valid JSON: ${(error as Error).message}`,

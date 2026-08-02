@@ -23,7 +23,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { LIMITS, validateListing, type Listing } from '../lib/schema'
+import { LIMITS, parseListingJson, validateListing, type Listing } from '../lib/schema'
 
 type Options = {
   root: string
@@ -78,7 +78,7 @@ function readListingFile(root: string, slug: string): Listing | null {
   const jsonPath = path.join(root, 'listings', slug, 'listing.json')
   if (!fs.existsSync(jsonPath)) return null
   try {
-    const parsed = validateListing(JSON.parse(fs.readFileSync(jsonPath, 'utf8')))
+    const parsed = validateListing(parseListingJson(fs.readFileSync(jsonPath, 'utf8')))
     return parsed.ok ? parsed.listing : null
   } catch {
     return null
@@ -103,7 +103,7 @@ function validateListingFolder(root: string, slug: string): string[] {
 
   let raw: unknown
   try {
-    raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'))
+    raw = parseListingJson(fs.readFileSync(jsonPath, 'utf8'))
   } catch (error) {
     errors.push(`listings/${slug}/listing.json is not valid JSON: ${(error as Error).message}`)
     return errors
