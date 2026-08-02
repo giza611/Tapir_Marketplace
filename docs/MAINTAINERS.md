@@ -22,8 +22,12 @@ If the repository name or owner changes, set `NEXT_PUBLIC_REPO_OWNER` and
 ## First-time setup checklist
 
 - [ ] Repository is **public** — forks, giscus and free Actions all depend on it
-- [ ] Discussions enabled, with a category named **Listings**
-      (Announcements-type categories will not work; giscus needs an open one)
+- [ ] Discussions enabled (comments default to the **General** category, which
+      GitHub creates for you; categories cannot be made via the API, so a
+      dedicated "Listings" category is optional polish — create it in the UI and
+      update `NEXT_PUBLIC_GISCUS_CATEGORY` / `_CATEGORY_ID` if you want one)
+- [ ] The [giscus GitHub App](https://github.com/apps/giscus) is installed on the
+      repository — without it the comment box loads but cannot post
 - [ ] `needs-review` label exists — CI applies it to submissions that fail
 - [ ] giscus IDs generated at <https://giscus.app> and set in the deployment
 - [ ] `GITHUB_TOKEN` set on the build, so `/forum` and download counts populate

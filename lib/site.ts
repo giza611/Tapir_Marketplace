@@ -32,7 +32,10 @@ export const TAPIR = {
 export const GISCUS = {
   repo: process.env.NEXT_PUBLIC_GISCUS_REPO ?? REPO_SLUG,
   repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? '',
-  category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'Listings',
+  // Defaults to General because GitHub creates it automatically and discussion
+  // categories cannot be created through the API — only in the web UI. A
+  // dedicated "Listings" category is tidier but would make setup a manual step.
+  category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'General',
   categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? '',
 } as const
 

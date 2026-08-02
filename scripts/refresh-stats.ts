@@ -26,7 +26,6 @@ const OUTPUT_FILE = path.join(ROOT, 'lib', 'stats.generated.json')
 
 const REPO_OWNER = process.env.REPO_OWNER ?? 'giza611'
 const REPO_NAME = process.env.REPO_NAME ?? 'Tapir_Marketplace'
-const DISCUSSION_CATEGORY = process.env.GISCUS_CATEGORY ?? 'Listings'
 
 const token = process.env.GITHUB_TOKEN
 if (!token) {
@@ -122,7 +121,8 @@ async function fetchDiscussions(): Promise<Map<string, DiscussionSummary> | null
       } = await octokit.graphql(query, { owner: REPO_OWNER, repo: REPO_NAME, cursor })
 
       for (const node of response.repository.discussions.nodes) {
-        if (node.category?.name !== DISCUSSION_CATEGORY) continue
+        // The `listing:` title prefix is what identifies a listing's thread, so
+        // filtering by category as well would only add a way to misconfigure it.
         if (!node.title.startsWith('listing:')) continue
         summaries.set(node.title.slice('listing:'.length), {
           reactions: node.reactions.totalCount,
