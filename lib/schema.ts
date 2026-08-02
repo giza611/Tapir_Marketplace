@@ -330,6 +330,24 @@ export const EMPTY_STATS: ListingStats = { downloads: 0, reactions: 0, commentCo
 // Validation helper shared by CI and the dashboard
 // ---------------------------------------------------------------------------
 
+/**
+ * Strips a UTF-8 byte-order mark.
+ *
+ * `JSON.parse` throws on a leading BOM, and plenty of Windows tooling — Notepad,
+ * PowerShell's `Set-Content -Encoding utf8`, some editors' "UTF-8" default —
+ * writes one without telling you. This audience works in Archicad on Windows,
+ * so refusing those files would mean a stream of submissions failing with
+ * "Unexpected token" and no clue why. Accept it and move on.
+ */
+export function stripBom(text: string): string {
+  return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text
+}
+
+/** Parses listing JSON text, tolerating a BOM. Throws on genuinely bad JSON. */
+export function parseListingJson(text: string): unknown {
+  return JSON.parse(stripBom(text))
+}
+
 export type ValidationResult =
   | { ok: true; listing: Listing }
   | { ok: false; errors: string[] }
