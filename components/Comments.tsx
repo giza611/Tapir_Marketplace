@@ -16,7 +16,19 @@ import { GISCUS, REPO_URL, isGiscusConfigured } from '@/lib/site'
  * `term` maps a page to its discussion. We pass the slug explicitly rather
  * than using pathname mapping so a future URL change doesn't orphan threads.
  */
-export function Comments({ term }: { term: string }) {
+export function Comments({
+  term,
+  mapping = 'specific',
+}: {
+  term: string
+  /**
+   * `specific` keys a thread to a listing slug and creates the discussion on
+   * first comment. `number` attaches to an existing discussion by its number,
+   * which is what lets a forum topic be read and replied to on this site
+   * instead of sending the reader to GitHub.
+   */
+  mapping?: 'specific' | 'number'
+}) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -31,9 +43,9 @@ export function Comments({ term }: { term: string }) {
     script.setAttribute('data-repo-id', GISCUS.repoId)
     script.setAttribute('data-category', GISCUS.category)
     script.setAttribute('data-category-id', GISCUS.categoryId)
-    script.setAttribute('data-mapping', 'specific')
+    script.setAttribute('data-mapping', mapping)
     script.setAttribute('data-term', term)
-    script.setAttribute('data-strict', '1')
+    if (mapping === 'specific') script.setAttribute('data-strict', '1')
     script.setAttribute('data-reactions-enabled', '1')
     script.setAttribute('data-emit-metadata', '0')
     script.setAttribute('data-input-position', 'top')
@@ -61,7 +73,7 @@ export function Comments({ term }: { term: string }) {
       media.removeEventListener('change', onThemeChange)
       container.innerHTML = ''
     }
-  }, [term])
+  }, [term, mapping])
 
   if (!isGiscusConfigured) {
     return (

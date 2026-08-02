@@ -22,7 +22,16 @@
   --color-bg: #f3f2f2;
   --color-surface: #eae9e9;
   --color-text: #201e1d;
-  --color-accent: #ec3013;
+  /*
+   * Tapir blue, taken from archicad-api.com rather than invented: #2977c9 is
+   * that site's primary blue and #233755 its dark navy. The Modernist system's
+   * structure is unchanged — this only re-hues the single accent role, which
+   * the system already uses sparingly.
+   */
+  --color-accent: #2977c9;
+  /** White, not the ground colour: it clears AA on the blue button (4.59:1 vs
+   *  4.11:1) and matches how archicad-api.com styles the same button. */
+  --color-accent-on: #ffffff;
   --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
   /* A lighter rule for the 1px hairlines inside components; the token above is
      the strong 2px section divider. */
@@ -39,15 +48,21 @@
   --color-neutral-800: #444141;
   --color-neutral-900: #2d2b2b;
 
-  --color-accent-100: #fff2ef;
-  --color-accent-200: #ffe0d9;
-  --color-accent-300: #ffc4b8;
-  --color-accent-400: #ff9783;
-  --color-accent-500: #ff563c;
-  --color-accent-600: #dd2b0f;
-  --color-accent-700: #ae1800;
-  --color-accent-800: #7c1405;
-  --color-accent-900: #4d170e;
+  /*
+   * Generated in OKLCH on the same lightness scale as the ramp it replaces, so
+   * a given step carries the same visual weight it did before. The hue eases
+   * from the brand blue toward the navy in the darkest steps, which is why 200
+   * lands on their pale blue and 900 on their navy.
+   */
+  --color-accent-100: #f1f6fc;
+  --color-accent-200: #dde9f8;
+  --color-accent-300: #bfd7f4;
+  --color-accent-400: #91bbf0;
+  --color-accent-500: #589aef;
+  --color-accent-600: #397ad0;
+  --color-accent-700: #295da3;
+  --color-accent-800: #1e4274;
+  --color-accent-900: #192c48;
 
   /* Roles the app refers to, resolved from the ramps above. */
   --text-muted: color-mix(in srgb, #201e1d 55%, transparent);
@@ -83,8 +98,11 @@
   --color-text-subtle: var(--text-subtle);
 
   --color-accent: var(--color-accent);
-  --color-accent-hover: var(--color-accent-600);
-  --color-accent-fg: var(--color-bg);
+  /* 600 is LIGHTER than the base blue, unlike the red ramp this replaced, so
+     hover and active step to 700/800 to stay in the "darkens on press"
+     direction the system expects. */
+  --color-accent-hover: var(--color-accent-700);
+  --color-accent-fg: var(--color-accent-on);
   --color-accent-subtle: var(--color-accent-100);
   --color-accent-border: var(--color-accent-300);
 
@@ -220,13 +238,13 @@ h6 {
 }
 .btn-primary {
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-accent-on);
 }
 .btn-primary:hover {
-  background: var(--color-accent-600);
+  background: var(--color-accent-700);
 }
 .btn-primary:active {
-  background: var(--color-accent-700);
+  background: var(--color-accent-800);
 }
 .btn-secondary {
   border-color: var(--color-divider);

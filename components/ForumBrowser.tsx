@@ -166,10 +166,13 @@ function ThreadRow({
   category: string
   scriptName: string | null
 }) {
-  // A listing's comment thread is more useful opened on the listing page, where
-  // the reader can see what is being discussed.
-  const href = discussion.listingSlug ? `/scripts/${discussion.listingSlug}` : discussion.url
-  const external = discussion.listingSlug === null
+  // Both destinations stay on this site. A listing's comment thread is most
+  // useful on the listing page, where the reader can see what is being
+  // discussed; a standalone topic gets its own thread page, where giscus
+  // renders the real discussion and replying works in place.
+  const href = discussion.listingSlug
+    ? `/scripts/${discussion.listingSlug}`
+    : `/forum/${discussion.number}`
 
   const content = (
     <div className="flex items-start gap-3 px-6 py-4 transition-colors hover:bg-surface-2">
@@ -203,11 +206,7 @@ function ThreadRow({
     </div>
   )
 
-  return external ? (
-    <a href={href} target="_blank" rel="noreferrer" className="block">
-      {content}
-    </a>
-  ) : (
+  return (
     <Link href={href} className="block">
       {content}
     </Link>
