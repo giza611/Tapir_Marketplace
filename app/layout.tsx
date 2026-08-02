@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
@@ -55,6 +56,9 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        {/* Vercel Analytics: cookieless and collects no personal data, so it
+            needs no consent banner. It reports nothing outside Vercel. */}
+        <Analytics />
       </body>
     </html>
   )
