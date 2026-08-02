@@ -4,8 +4,25 @@
  * never hardcoded across component files.
  */
 
-export const REPO_OWNER = process.env.NEXT_PUBLIC_REPO_OWNER ?? 'giza611'
-export const REPO_NAME = process.env.NEXT_PUBLIC_REPO_NAME ?? 'Tapir_Marketplace'
+/**
+ * Reads an environment variable, stripping a byte-order mark and surrounding
+ * whitespace.
+ *
+ * Not paranoia — this cost a failed production build. Piping a value into
+ * `vercel env add` from PowerShell stores it as `﻿<value>\r\n`, and the
+ * damage is silent: a contaminated giscus ID just makes comments quietly stop
+ * working, while a contaminated URL blows up `new URL()` at build time. Anyone
+ * pasting a value into a dashboard field can introduce the same thing.
+ */
+function env(name: string): string | undefined {
+  const raw = process.env[name]
+  if (raw === undefined) return undefined
+  const cleaned = raw.replace(/^﻿/, '').trim()
+  return cleaned.length > 0 ? cleaned : undefined
+}
+
+export const REPO_OWNER = env('NEXT_PUBLIC_REPO_OWNER') ?? 'giza611'
+export const REPO_NAME = env('NEXT_PUBLIC_REPO_NAME') ?? 'Tapir_Marketplace'
 export const REPO_SLUG = `${REPO_OWNER}/${REPO_NAME}`
 export const REPO_URL = `https://github.com/${REPO_SLUG}`
 
@@ -14,7 +31,7 @@ export const SITE = {
   tagline: 'Scripts and add-ons for Archicad, shared by the people who wrote them',
   description:
     'A community marketplace for Tapir scripts and Archicad add-ons. Browse, download and discuss automation tools built by architects and developers.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tapir-marketplace.vercel.app',
+  url: env('NEXT_PUBLIC_SITE_URL') ?? 'https://tapir-marketplace.vercel.app',
 } as const
 
 /** Upstream project this marketplace serves. */
@@ -30,13 +47,13 @@ export const TAPIR = {
  * failing — a half-configured deploy should degrade, not break.
  */
 export const GISCUS = {
-  repo: process.env.NEXT_PUBLIC_GISCUS_REPO ?? REPO_SLUG,
-  repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? '',
+  repo: env('NEXT_PUBLIC_GISCUS_REPO') ?? REPO_SLUG,
+  repoId: env('NEXT_PUBLIC_GISCUS_REPO_ID') ?? '',
   // Defaults to General because GitHub creates it automatically and discussion
   // categories cannot be created through the API — only in the web UI. A
   // dedicated "Listings" category is tidier but would make setup a manual step.
-  category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'General',
-  categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? '',
+  category: env('NEXT_PUBLIC_GISCUS_CATEGORY') ?? 'General',
+  categoryId: env('NEXT_PUBLIC_GISCUS_CATEGORY_ID') ?? '',
 } as const
 
 export const isGiscusConfigured = Boolean(GISCUS.repoId && GISCUS.categoryId)
