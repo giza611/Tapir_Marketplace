@@ -154,6 +154,130 @@ export async function fetchDiscussionsFromApi(
   return discussions
 }
 
+export type DiscussionCategory = {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  /** Answerable categories render as Q&A on GitHub. */
+  isAnswerable: boolean
+}
+
+async function graphql<T>(token: string, query: string, variables: object): Promise<T> {
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
+  })
+
+  const payload = (await response.json()) as { data?: T; errors?: { message: string }[] }
+  if (payload.errors?.length) throw new Error(payload.errors[0].message)
+  if (!response.ok || !payload.data) throw new Error(`GitHub returned ${response.status}`)
+  return payload.data
+}
+
+/** Categories a topic can be filed under. Needs a token; used on the compose page. */
+export async function fetchCategories(
+  token: string,
+  owner: string,
+  repo: string,
+): Promise<DiscussionCategory[]> {
+  const data = await graphql<{
+    repository: {
+      discussionCategories: { nodes: DiscussionCategory[] }
+    } | null
+  }>(
+    token,
+    `query($owner: String!, $repo: String!) {
+       repository(owner: $owner, name: $repo) {
+         discussionCategories(first: 25) {
+           nodes { id name emoji description isAnswerable }
+         }
+       }
+     }`,
+    { owner, repo },
+  )
+
+  return data.repository?.discussionCategories.nodes ?? []
+}
+
+/** The repository's node ID, required by createDiscussion. */
+export async function fetchRepositoryId(
+  token: string,
+  owner: string,
+  repo: string,
+): Promise<string> {
+  const data = await graphql<{ repository: { id: string } | null }>(
+    token,
+    `query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { id } }`,
+    { owner, repo },
+  )
+  if (!data.repository) throw new Error('Repository not found')
+  return data.repository.id
+}
+
+/**
+ * Creates a discussion as the signed-in user.
+ *
+ * The token belongs to the person posting, never to the site, so a topic is
+ * attributable to a real GitHub account and GitHub's own abuse limits apply.
+ * There is no rate limiting here because there is nowhere to keep a counter —
+ * and none is needed while posting requires an account GitHub already polices.
+ */
+export async function createDiscussion(
+  token: string,
+  repositoryId: string,
+  categoryId: string,
+  title: string,
+  body: string,
+): Promise<{ number: number; url: string }> {
+  const data = await graphql<{
+    createDiscussion: { discussion: { number: number; url: string } }
+  }>(
+    token,
+    `mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+       createDiscussion(input: {
+         repositoryId: $repositoryId,
+         categoryId: $categoryId,
+         title: $title,
+         body: $body
+       }) {
+         discussion { number url }
+       }
+     }`,
+    { repositoryId, categoryId, title, body },
+  )
+
+  return data.createDiscussion.discussion
+}
+
+/** Reads one discussion live. Used for a thread not yet in the daily index. */
+export async function fetchDiscussionByNumber(
+  token: string,
+  owner: string,
+  repo: string,
+  number: number,
+): Promise<Discussion | null> {
+  const data = await graphql<{ repository: { discussion: DiscussionNode | null } | null }>(
+    token,
+    `query($owner: String!, $repo: String!, $number: Int!) {
+       repository(owner: $owner, name: $repo) {
+         discussion(number: $number) {
+           number title url bodyText createdAt updatedAt isAnswered
+           category { name emoji }
+           author { login avatarUrl }
+           comments { totalCount }
+           reactions { totalCount }
+         }
+       }
+     }`,
+    { owner, repo, number },
+  )
+
+  const node = data.repository?.discussion
+  return node ? toDiscussion(node) : null
+}
+
 function summarise(discussions: Discussion[]): DiscussionData {
   return {
     available: true,

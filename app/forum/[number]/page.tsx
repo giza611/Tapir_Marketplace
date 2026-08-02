@@ -5,8 +5,10 @@ import { ArrowUpRight, CheckCircle2 } from 'lucide-react'
 
 import { Badge } from '@/components/Badge'
 import { Comments } from '@/components/Comments'
-import { getDiscussions } from '@/lib/discussions'
+import { getSession } from '@/lib/auth'
+import { fetchDiscussionByNumber, getDiscussions } from '@/lib/discussions'
 import { formatRelative } from '@/lib/format'
+import { REPO_NAME, REPO_OWNER } from '@/lib/site'
 
 type Props = { params: Promise<{ number: string }> }
 
@@ -40,7 +42,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ThreadPage({ params }: Props) {
   const { number } = await params
   const { discussions } = await getDiscussions()
-  const thread = discussions.find((d) => String(d.number) === number)
+
+  let thread = discussions.find((d) => String(d.number) === number)
+
+  // A topic posted from this site will not be in the daily index yet. The
+  // author is signed in at that moment, so read it live with their token
+  // rather than showing them a 404 for the thread they just created.
+  if (!thread && /^\d+$/.test(number)) {
+    const session = await getSession()
+    if (session) {
+      try {
+        thread =
+          (await fetchDiscussionByNumber(
+            session.token,
+            REPO_OWNER,
+            REPO_NAME,
+            Number(number),
+          )) ?? undefined
+      } catch {
+        // Fall through to notFound below.
+      }
+    }
+  }
+
   if (!thread) notFound()
 
   return (

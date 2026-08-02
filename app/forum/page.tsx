@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import { ForumBrowser } from '@/components/ForumBrowser'
 import { getDiscussions } from '@/lib/discussions'
 import { getAllListings } from '@/lib/listings'
 import { CATEGORY_LABELS } from '@/lib/schema'
-import { REPO_URL, newDiscussionUrl } from '@/lib/site'
+import { REPO_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Forum',
@@ -28,14 +29,9 @@ export default async function ForumPage() {
   return (
     <div className="mx-auto max-w-[900px] px-6 py-6">
       <div className="mb-4 flex justify-end">
-        <a
-          href={newDiscussionUrl()}
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-primary btn-centered"
-        >
+        <Link href="/forum/new" className="btn btn-primary btn-centered">
           New topic
-        </a>
+        </Link>
       </div>
 
       {available ? (
