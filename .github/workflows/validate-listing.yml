@@ -15,6 +15,11 @@ name: Validate listing
 # does get write access — which is exactly why it is dangerous:
 #
 #   * It executes the workflow definition from the BASE branch (trusted). Good.
+#
+# Note on downloads: this workflow does NOT fetch a submission's download URL.
+# Doing so would let any contributor aim the runner at a host of their choosing.
+# Downloads are hashed by the scheduled job instead, which only ever reads
+# already-merged listings — see scripts/refresh-stats.ts.
 #   * But if it ever CHECKS OUT and RUNS code from the fork, that fork code runs
 #     with the base repo's write token and secrets. That is a full repository
 #     takeover in one pull request.

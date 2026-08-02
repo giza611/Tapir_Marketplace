@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { integrityKey, type IntegrityIndex, type IntegrityRecord } from './integrity'
 import {
   EMPTY_STATS,
   parseListingJson,
@@ -20,6 +21,7 @@ import {
 
 const LISTINGS_DIR = path.join(process.cwd(), 'listings')
 const STATS_FILE = path.join(process.cwd(), 'lib', 'stats.generated.json')
+const INTEGRITY_FILE = path.join(process.cwd(), 'lib', 'integrity.generated.json')
 
 /** Read once per process. `next build` renders many pages; don't re-read per page. */
 let cache: ResolvedListing[] | null = null
@@ -33,7 +35,20 @@ function readStats(): Record<string, ListingStats> {
   }
 }
 
-function readListing(slug: string, stats: Record<string, ListingStats>): ResolvedListing {
+function readIntegrity(): IntegrityIndex {
+  try {
+    return JSON.parse(fs.readFileSync(INTEGRITY_FILE, 'utf8')) as IntegrityIndex
+  } catch {
+    // Expected before scripts/refresh-stats.ts has ever run.
+    return {}
+  }
+}
+
+function readListing(
+  slug: string,
+  stats: Record<string, ListingStats>,
+  integrityIndex: IntegrityIndex,
+): ResolvedListing {
   const dir = path.join(LISTINGS_DIR, slug)
   const jsonPath = path.join(dir, 'listing.json')
 
@@ -70,6 +85,12 @@ function readListing(slug: string, stats: Record<string, ListingStats>): Resolve
     (a, b) => Number(b) - Number(a),
   )
 
+  const integrity: Record<string, IntegrityRecord> = {}
+  for (const version of versions) {
+    const record = integrityIndex[integrityKey(slug, version.version)]
+    if (record) integrity[version.version] = record
+  }
+
   return {
     ...listing,
     versions,
@@ -77,6 +98,7 @@ function readListing(slug: string, stats: Record<string, ListingStats>): Resolve
     latestVersion: versions[0],
     supportedArchicadVersions: supported,
     stats: stats[slug] ?? EMPTY_STATS,
+    integrity,
   }
 }
 
@@ -89,13 +111,14 @@ export function getAllListings(): ResolvedListing[] {
   }
 
   const stats = readStats()
+  const integrityIndex = readIntegrity()
   const slugs = fs
     .readdirSync(LISTINGS_DIR, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
     .map((entry) => entry.name)
 
   cache = slugs
-    .map((slug) => readListing(slug, stats))
+    .map((slug) => readListing(slug, stats, integrityIndex))
     .sort((a, b) => b.latestVersion.releasedAt.localeCompare(a.latestVersion.releasedAt))
 
   return cache

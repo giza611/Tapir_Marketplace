@@ -88,9 +88,11 @@ export default function SubmitPage() {
             Archicad version you have not actually tested wastes someone an afternoon.
           </Rule>
           <Rule>
-            <strong className="text-text">Host downloads on GitHub or GitLab.</strong> Links
-            elsewhere are rejected — a marketplace that points at arbitrary hosts is a malware
-            delivery service waiting to happen. Release assets also give you download counts.
+            <strong className="text-text">Host the download wherever you like</strong>, as long as
+            it is a public https link. Every file is hashed the first time it is seen and checked
+            again daily — if the bytes behind a published version change, the listing is flagged
+            and the download is pulled until you publish a proper new version. A GitHub release
+            asset is still the easiest option, and it is the only one that reports download counts.
           </Rule>
           <Rule>
             <strong className="text-text">Keep screenshots small.</strong> Up to{' '}

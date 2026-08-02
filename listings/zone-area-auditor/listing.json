@@ -4,7 +4,13 @@
   "summary": "Flags zones whose measured area drifts from their target area, and lists rooms with missing or duplicate numbers.",
   "category": "quality-assurance",
   "type": "python-script",
-  "tags": ["zones", "areas", "qa", "model-check", "room-numbers"],
+  "tags": [
+    "zones",
+    "areas",
+    "qa",
+    "model-check",
+    "room-numbers"
+  ],
   "author": {
     "name": "Tapir Marketplace (starter example)",
     "website": "https://enzyme-apd.github.io/tapir-archicad-automation/"
@@ -15,8 +21,10 @@
       "version": "0.9.0",
       "releasedAt": "2026-08-01",
       "changelog": "Initial starter example published with the marketplace. Verified against the CI gatekeeper.",
-      "downloadUrl": "https://github.com/ENZYME-APD/tapir-archicad-automation",
-      "archicadVersions": ["28"],
+      "downloadUrl": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Mac.zip",
+      "archicadVersions": [
+        "28"
+      ],
       "minTapirVersion": "1.1.0"
     }
   ],

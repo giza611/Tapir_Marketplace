@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import type { IntegrityRecord } from './integrity'
+
 /**
  * The contract for `listings/<slug>/listing.json`.
  *
@@ -117,17 +119,38 @@ export const LIMITS = {
 } as const
 
 /**
- * Download links must resolve to a host we are willing to point users at.
- * An unvetted `downloadUrl` is the single highest-risk field on the site:
- * people run what they download, inside their production Archicad.
+ * `downloadUrl` is the highest-risk field on the site: people run what they
+ * download, inside their production Archicad.
+ *
+ * This used to be restricted to an allowlist of GitHub and GitLab hosts. That
+ * was dropped, because it turned away authors who host their own work while
+ * providing far less protection than it appeared to — anyone can put a
+ * malicious file in a free GitHub release, and nothing checked the file itself.
+ * A listing could pass review pointing at a clean asset and be swapped for a
+ * malicious one the next day, on any host.
+ *
+ * What replaced it is integrity monitoring (see lib/integrity.ts): the daily
+ * job records a SHA-256 of every download on first sight and re-verifies it.
+ * If a file changes without a new version being published, the listing is
+ * flagged and its download hidden. That catches the swap attack the allowlist
+ * never could, and it works regardless of where the file is hosted.
+ *
+ * What remains here is basic transport sanity.
  */
-export const ALLOWED_DOWNLOAD_HOSTS = [
-  'github.com',
-  'raw.githubusercontent.com',
-  'objects.githubusercontent.com',
-  'codeload.github.com',
-  'gitlab.com',
-] as const
+function isPlausibleDownloadUrl(raw: string): boolean {
+  try {
+    const { protocol, hostname } = new URL(raw)
+    if (protocol !== 'https:') return false
+    // A download nobody outside the author's machine can reach.
+    if (hostname === 'localhost' || hostname.endsWith('.localhost')) return false
+    // Bare IP literals: no accountable owner, and usually a mistake.
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) return false
+    if (hostname.includes(':')) return false
+    return hostname.includes('.')
+  } catch {
+    return false
+  }
+}
 
 export const ALLOWED_VIDEO_HOSTS = [
   'youtube.com',
@@ -188,8 +211,8 @@ export const versionSchema = z
     downloadUrl: z
       .url()
       .refine(
-        (u) => hostAllowed(u, ALLOWED_DOWNLOAD_HOSTS),
-        `downloadUrl must be an https link on one of: ${ALLOWED_DOWNLOAD_HOSTS.join(', ')}`,
+        isPlausibleDownloadUrl,
+        'downloadUrl must be a public https link (not http, localhost or a bare IP address)',
       ),
     /** Archicad majors this version is known to work with, e.g. ["27","28"]. */
     archicadVersions: z
@@ -316,6 +339,11 @@ export type ResolvedListing = Listing & {
   supportedArchicadVersions: string[]
   /** Populated by scripts/refresh-stats.ts; zero until it first runs. */
   stats: ListingStats
+  /**
+   * Download integrity per version string, from lib/integrity.generated.json.
+   * Empty until the daily job has seen this listing. See lib/integrity.ts.
+   */
+  integrity: Record<string, IntegrityRecord>
 }
 
 export type ListingStats = {

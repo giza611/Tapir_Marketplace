@@ -391,7 +391,11 @@ export function ListingEditor({ login, initial, today }: Props) {
                 </Field>
               </div>
 
-              <Field label="Download URL" required hint="A GitHub release asset gives you download counts.">
+              <Field
+                label="Download URL"
+                required
+                hint="Any public https link. The file is hashed and re-checked daily, so publish a new version rather than replacing a file in place. GitHub release assets also report download counts."
+              >
                 <input
                   required
                   type="url"

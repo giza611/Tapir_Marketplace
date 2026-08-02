@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowDownToLine, ArrowUpRight, Globe, Mail, Video } from 'lucide-react'
+import { ArrowDownToLine, ArrowUpRight, Globe, Mail, ShieldAlert, Video } from 'lucide-react'
 
 import { Badge } from '@/components/Badge'
 import { Comments } from '@/components/Comments'
@@ -9,6 +9,7 @@ import { archicadRange, priceLabel } from '@/components/ListingCard'
 import { Markdown } from '@/components/Markdown'
 import { ScreenshotGallery } from '@/components/ScreenshotGallery'
 import { formatCount, formatDate, formatRelative, prettyUrl } from '@/lib/format'
+import { integrityNotice, isDownloadable } from '@/lib/integrity'
 import { getAllListings, getListing } from '@/lib/listings'
 import { CATEGORY_LABELS, LISTING_TYPE_LABELS, type ResolvedListing } from '@/lib/schema'
 import { REPO_URL } from '@/lib/site'
@@ -147,18 +148,31 @@ export default async function ListingPage({ params }: Props) {
 function Sidebar({ listing }: { listing: ResolvedListing }) {
   const latest = listing.latestVersion
   const paid = listing.pricing.model === 'paid'
+  const record = listing.integrity[latest.version]
+  const blocked = !isDownloadable(record)
+  const notice = integrityNotice(record)
 
   return (
     <aside className="w-full shrink-0 px-6 py-6 lg:w-[300px]">
-      <a
-        href={latest.downloadUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="btn btn-primary btn-block"
-      >
-        <ArrowDownToLine size={14} aria-hidden />
-        {paid ? `Buy · v${latest.version}` : `Download v${latest.version}`}
-      </a>
+      {blocked ? (
+        <div className="border-2 border-accent bg-accent-subtle p-4">
+          <p className="flex items-center gap-2 font-heading text-[13px] text-accent-800">
+            <ShieldAlert size={15} aria-hidden />
+            Download unavailable
+          </p>
+          <p className="mt-2 text-[11px] leading-relaxed text-accent-900">{notice}</p>
+        </div>
+      ) : (
+        <a
+          href={latest.downloadUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-primary btn-block"
+        >
+          <ArrowDownToLine size={14} aria-hidden />
+          {paid ? `Buy · v${latest.version}` : `Download v${latest.version}`}
+        </a>
+      )}
 
       {listing.pricing.model === 'donation' && listing.pricing.url && (
         <a
@@ -273,7 +287,10 @@ function VersionHistory({ listing }: { listing: ResolvedListing }) {
           </tr>
         </thead>
         <tbody>
-          {listing.versions.map((version, index) => (
+          {listing.versions.map((version, index) => {
+            const record = listing.integrity[version.version]
+            const blocked = !isDownloadable(record)
+            return (
             <tr key={version.version}>
               <td className="align-top">
                 <span className="font-heading text-[13px]">v{version.version}</span>
@@ -282,9 +299,19 @@ function VersionHistory({ listing }: { listing: ResolvedListing }) {
                     Latest
                   </Badge>
                 )}
+                {blocked && (
+                  <Badge tone="highlight" className="ml-2">
+                    Flagged
+                  </Badge>
+                )}
                 {version.changelog && (
                   <p className="mt-1 text-[11px] leading-relaxed text-text-muted">
                     {version.changelog}
+                  </p>
+                )}
+                {blocked && (
+                  <p className="mt-1 text-[11px] leading-relaxed text-accent-800">
+                    {integrityNotice(record)}
                   </p>
                 )}
               </td>
@@ -295,17 +322,22 @@ function VersionHistory({ listing }: { listing: ResolvedListing }) {
                 {archicadRange(version.archicadVersions)}
               </td>
               <td className="align-top text-right">
-                <a
-                  href={version.downloadUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[12px] text-accent-700 underline underline-offset-2"
-                >
-                  Download
-                </a>
+                {blocked ? (
+                  <span className="text-[12px] text-text-subtle">Unavailable</span>
+                ) : (
+                  <a
+                    href={version.downloadUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[12px] text-accent-700 underline underline-offset-2"
+                  >
+                    Download
+                  </a>
+                )}
               </td>
             </tr>
-          ))}
+            )
+          })}
         </tbody>
       </table>
     </section>
