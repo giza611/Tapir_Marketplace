@@ -1,4 +1,4 @@
-{
+﻿{
   "slug": "zone-area-auditor",
   "name": "Zone Area Auditor",
   "summary": "Flags zones whose measured area drifts from their target area, and lists rooms with missing or duplicate numbers.",
@@ -14,7 +14,7 @@
     {
       "version": "0.9.0",
       "releasedAt": "2026-08-01",
-      "changelog": "Initial starter example published with the marketplace.",
+      "changelog": "Initial starter example published with the marketplace. Verified against the CI gatekeeper.",
       "downloadUrl": "https://github.com/ENZYME-APD/tapir-archicad-automation",
       "archicadVersions": ["28"],
       "minTapirVersion": "1.1.0"
