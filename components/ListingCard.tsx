@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowDownToLine, Star } from 'lucide-react'
 
+import { Badge } from '@/components/Badge'
 import { formatCount } from '@/lib/format'
 import { mediaUrl } from '@/lib/media'
 import { CATEGORY_LABELS, type ResolvedListing } from '@/lib/schema'
@@ -8,24 +9,22 @@ import { CATEGORY_LABELS, type ResolvedListing } from '@/lib/schema'
 type CatalogCardEntry = Omit<ResolvedListing, 'readme'>
 
 /**
- * The browse-grid card, per the handoff's "script card anatomy":
+ * A cell in the card matrix.
  *
- *   1. icon square · name over author+company · price badge, right aligned
- *   2. short description, 2–3 lines
- *   3. pinned to the bottom behind a 1px rule: category left / version right,
- *      then a metrics row — rating, downloads, Archicad range
- *
- * The whole card is the link target; hover raises the border to full strength.
+ * The visual pass treats the grid as one continuous ruled surface rather than a
+ * row of separated boxes: the container draws the left rule, each cell draws
+ * its own right and bottom rule. So this component carries no box of its own
+ * and no shadow — nothing floats in this system.
  */
 export function ListingCard({ listing }: { listing: CatalogCardEntry }) {
   const cover = listing.media[0]
 
   return (
-    <article className="card card-interactive relative flex min-h-[180px] flex-col gap-2.5 p-3.5 transition-colors">
-      <div className="flex items-start gap-2.5">
-        <div className="h-[34px] w-[34px] shrink-0 overflow-hidden border border-border bg-surface-2">
+    <article className="group relative flex min-h-[206px] flex-col border-b border-r border-border p-5 transition-colors hover:bg-neutral-100">
+      <div className="flex items-start justify-between gap-3">
+        <div className="h-9 w-9 shrink-0 overflow-hidden border border-border bg-surface-2">
           {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
+            // eslint-disable-next-line @next/next/no-img-element -- local, size-capped by CI
             <img
               src={mediaUrl(listing.slug, cover)}
               alt=""
@@ -37,46 +36,43 @@ export function ListingCard({ listing }: { listing: CatalogCardEntry }) {
           )}
         </div>
 
-        <div className="min-w-0 flex-1">
-          <h3 className="font-heading text-[13px] leading-tight">
-            {/* One focusable target for the whole card. */}
-            <Link href={`/scripts/${listing.slug}`} className="before:absolute before:inset-0">
-              {listing.name}
-            </Link>
-          </h3>
-          <p className="mt-0.5 truncate text-[10.5px] text-text-muted">
-            {listing.author.name}
-            {listing.author.company ? `, ${listing.author.company}` : ''}
-          </p>
-        </div>
-
         <span className="tag tag-outline shrink-0">{priceLabel(listing)}</span>
       </div>
 
+      <h3 className="mt-4 text-[16px] leading-tight">
+        {/* One focusable target for the whole cell. */}
+        <Link href={`/scripts/${listing.slug}`} className="before:absolute before:inset-0">
+          {listing.name}
+        </Link>
+      </h3>
+
+      <p className="mt-1 truncate text-[12px] text-text-muted">
+        {listing.author.name}
+        {listing.author.company ? `, ${listing.author.company}` : ''}
+      </p>
+
       <p
-        className="text-[11px] leading-[1.55] text-text-muted"
+        className="mt-2.5 text-[12.5px] leading-[1.5] text-text-muted"
         style={{ textWrap: 'pretty' }}
       >
         {listing.summary}
       </p>
 
-      <div className="mt-auto border-t border-border pt-2.5">
-        <div className="flex items-center justify-between gap-2 text-[10.5px]">
-          <span className="truncate text-text-muted">{CATEGORY_LABELS[listing.category]}</span>
-          <span className="shrink-0 font-heading">v{listing.latestVersion.version}</span>
-        </div>
+      <div className="mt-3">
+        <Badge tone="neutral">{CATEGORY_LABELS[listing.category]}</Badge>
+      </div>
 
-        <div className="mt-1.5 flex items-center gap-3 text-[10.5px] text-text-muted">
-          <span className="flex items-center gap-1" title="Reactions on the discussion thread">
-            <Star size={11} aria-hidden />
-            {formatCount(listing.stats.reactions)}
-          </span>
-          <span className="flex items-center gap-1" title="Downloads">
-            <ArrowDownToLine size={11} aria-hidden />
-            {formatCount(listing.stats.downloads)}
-          </span>
-          <span className="ml-auto shrink-0">{archicadRange(listing.supportedArchicadVersions)}</span>
-        </div>
+      <div className="mt-auto flex items-center gap-3.5 border-t border-border pt-3 text-[11px] text-text-muted">
+        <span className="flex items-center gap-1 text-accent" title="Reactions">
+          <Star size={11} aria-hidden />
+          {formatCount(listing.stats.reactions)}
+        </span>
+        <span className="flex items-center gap-1" title="Downloads">
+          <ArrowDownToLine size={11} aria-hidden />
+          {formatCount(listing.stats.downloads)}
+        </span>
+        <span>{archicadRange(listing.supportedArchicadVersions)}</span>
+        <span className="ml-auto shrink-0">v{listing.latestVersion.version}</span>
       </div>
     </article>
   )
@@ -107,10 +103,10 @@ export function archicadRange(versions: string[]): string {
 function IconFallback({ seed }: { seed: string }) {
   const step = [...seed].reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) % 9, 3)
   const shades = [
-    'var(--color-neutral-200)',
     'var(--color-neutral-300)',
     'var(--color-neutral-400)',
     'var(--color-neutral-500)',
+    'var(--color-neutral-600)',
   ]
   return (
     <div
@@ -118,7 +114,7 @@ function IconFallback({ seed }: { seed: string }) {
       className="flex h-full w-full items-center justify-center"
       style={{ background: shades[step % shades.length] }}
     >
-      <span className="font-heading text-[13px] text-bg">{seed.charAt(0).toUpperCase()}</span>
+      <span className="font-heading text-[14px] text-bg">{seed.charAt(0).toUpperCase()}</span>
     </div>
   )
 }

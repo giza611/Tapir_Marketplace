@@ -116,14 +116,24 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/*
+ * Everything below is layered on purpose.
+ *
+ * Tailwind v4 puts its utilities in `@layer utilities`, and unlayered CSS beats
+ * any layered CSS regardless of specificity. So a plain `h1 { letter-spacing }`
+ * rule here would silently override `tracking-[-0.03em]` on a heading — which
+ * it did, until these blocks were wrapped. Base and component styles must sit
+ * in earlier layers so utilities can still win.
+ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-body {
-  background: var(--color-bg);
+  body {
+    background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 15px;
@@ -166,8 +176,10 @@ h6 {
     scroll-behavior: auto !important;
   }
 }
+} /* end @layer base */
 
 /* ── Component layer, ported from the design system ─────────────────────── */
+@layer components {
 
 /** The strong 2px section rule. */
 .hr {
@@ -434,3 +446,4 @@ textarea.input {
   max-width: 100%;
   height: auto;
 }
+} /* end @layer components */

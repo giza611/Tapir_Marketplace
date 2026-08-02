@@ -18,36 +18,75 @@ Recreate these screens in the target codebase using its own framework, router, d
 component library. If no codebase exists yet, pick the stack (a React/Next.js app with a
 Postgres-backed API is a natural fit for this feature set) and build the screens there.
 
-To view the reference: open the `.dc.html` file in a browser (it needs `support.js`, kept
-alongside it). The page is a pan/zoom canvas holding seven labelled options, `1a` to `1g`.
+To view the reference: open the `.dc.html` file in a browser (it needs `support.js` and the
+`_ds/` folder kept alongside it). The page is a pan/zoom canvas holding nine labelled options.
+Scroll to the top for the finished visual direction, `2a` and `2b`; the grayscale wireframes
+for the remaining screens sit below as `1a` to `1g`.
 
 ## Fidelity
 
-**Low fidelity.** These are grayscale wireframes: boxes, hairline rules and labels. They define
-layout, information hierarchy, content and flow. They deliberately make **no** final visual
-decisions — the greys, borders and type sizes in the HTML are wireframe scaffolding and should
-NOT be copied.
+**Two levels, both in the same file.**
 
-**Apply the Modernist design system for all styling.** It is bundled in `design-system/`
-(`styles.css` = the token sheet plus the component layer, `readme.md` = the usage guide).
-Summary of what that means in practice:
+- **Turn 2 (`2a` home, `2b` script detail) is high fidelity and is the direction to build.**
+  Final colors, type, spacing and structure in the Modernist design system. Recreate these two
+  screens closely, using the codebase's component library where it can express the same result.
+- **Turn 1 (`1a` to `1g`) is low fidelity.** Grayscale wireframes defining layout, content and
+  flow for the screens that have not had a visual pass yet: forum, dashboard, upload form,
+  profile, plus the site map. Take structure and copy from them, but take **all styling** from
+  the Modernist system and from the finished look established in `2a` and `2b`. The greys,
+  hairlines and mono type in turn 1 are wireframe scaffolding and must not be copied.
 
-- Ground `#f3f2f2`, ink `#201e1d`, single accent `#ec3013`, used sparingly.
-- Archivo for both headings and body (`--font-heading` / `--font-body`).
+### The Modernist system
+
+Bundled in `design-system/` (`styles.css` = tokens plus component layer, `_ds_bundle.js` =
+the components, `readme.md` = the usage guide). Link `styles.css` and take every value from
+its variables.
+
+- Ground `#f3f2f2`, surface `#eae9e9`, ink `#201e1d`, one accent `#ec3013`.
+- Archivo throughout: headings at weight 800 with tight negative tracking, body at 400.
 - **Zero border radius anywhere.** `--radius-md` is 0 on purpose.
-- Strong 2px dividers (`--color-divider`) between major sections; visible modular grid.
-- Everything flush left, including labels inside wide buttons.
-- Photographs and screenshots go through the `.grayscale` wrapper.
-- Take every color, space and size from `var(--*)` tokens; never hard-code a hex or px value
-  the tokens already carry.
+- 2px `--color-divider` rules between major sections; 1px `--color-neutral-300` inside a grid.
+- Nothing floats: no drop shadows on cards, no soft edges. Alignment and rule weight do the
+  organising.
+- Everything flush left, including labels inside wide buttons (`.btn-block`).
+- Accent used sparingly: the primary button, one number in a stat row, active states, and the
+  one full red poster band. For paragraph-size text in the accent use `--color-accent-700`.
+- Photographs go through the `.grayscale` wrapper. Never tint imagery.
 - Icons: Lucide.
 - Focus: `:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }`.
-- Reuse its classes rather than inventing parallel ones: `.btn` (`.btn-primary`,
-  `.btn-secondary`, `.btn-ghost`, `.btn-icon`), `.tag`, `.card`, `.field`/`.input`/`.seg`,
-  `.nav`, `.table`, `.dialog`, `.hr`, `.grayscale`.
+- Classes to reuse rather than re-invent: `.btn` (`.btn-primary`, `.btn-secondary`,
+  `.btn-ghost`, `.btn-icon`, `.btn-block`), `.tag` (`.tag-accent`, `.tag-neutral`,
+  `.tag-outline`), `.card`, `.field` / `.input` / `.radio` / `.seg`, `.nav`, `.table`,
+  `.dialog`, `.hr`, `.grayscale`.
 
-Where the wireframe shows a chip, use `.tag`. Where it shows an outlined rectangle with a
-label, use the matching `.btn` variant. Where it shows a bordered panel, use `.card`.
+### What the visual pass added on top of the wireframes
+
+Both are visible in `2a` and `2b` and should carry to every remaining screen.
+
+- **Header:** 64px tall, 2px bottom rule. Brand mark plus wordmark at 19px/800, then a text nav
+  (Scripts, Forum, Publish, About) at 13px/600 where the active item carries a 2px accent
+  underline. Right side: search input and the accent Sign in button.
+- **Home hero:** a 1.35fr / 1fr split above a 2px rule. Left, an accent eyebrow at 12px/600 with
+  0.16em tracking, a 54px/800 headline at -0.03em tracking capped at 14ch, a 15px lede at 52ch,
+  and two buttons. Right, behind a 2px left rule, three stats at 32px/800 over 11px tracked
+  uppercase labels; only the last number is accent red.
+- **Card grid as a matrix:** cards are cells of one continuous 1px grid (left rule on the
+  container, right and bottom rule on each cell), not separated boxes. 20px padding, 206px min
+  height, hover fills with `--color-neutral-100`. Inside: icon square and price badge on one
+  row, then name at 16px/800, author at 12px, description at 12.5px, then a category `.tag`
+  and a bottom metric row (rating in accent, downloads, AC range, version) above a 1px rule.
+- **Left rail:** 230px, 2px right rule. Rows are 13px with a 1px bottom rule and the count in
+  muted grey; the active row goes accent and 600.
+- **Sort control:** small square chips, active chip is a solid accent fill with ground-colored
+  text.
+- **Poster band:** the page closes on a full-bleed accent field with a 38px/800 statement flush
+  left and a ground-colored button. Exactly one of these per page.
+- **Detail page:** title at 38px/800; metadata as a tag row; the download stack sits top right
+  of the header block rather than in a sidebar; a four-cell stat strip under a 2px rule
+  (rating in accent, downloads, posts, versions); then a two-column body split by a 2px rule.
+  Sidebar sections are 11px tracked uppercase labels each under their own 2px rule. Comment
+  bodies at 14px/1.65, replies indented behind a 2px left rule, the author marked with an
+  accent tag.
 
 ## Screens / views
 
@@ -266,7 +305,7 @@ dashboard aggregates.
 
 ## Design tokens
 
-Do not read tokens off the wireframe. Take all of them from `design-system/styles.css`:
+Do not read tokens off the turn 1 wireframes. Take all of them from `design-system/styles.css`:
 `--color-*` (including the 100–900 ramps), `--font-heading` / `--font-body`, `--space-*`,
 `--radius-*` (all 0), `--shadow-sm/md/lg`. Key values: bg `#f3f2f2`, text `#201e1d`,
 accent `#ec3013`, Archivo, radius 0, 2px section dividers.
@@ -284,11 +323,14 @@ ground only clears 3:1, which is fine for chrome and large text but not body cop
 
 ## Files
 
-- `design/Tapir Marketplace Wireframes.dc.html` — the seven wireframes (`1a` site map,
-  `1b` home, `1c` script detail, `1d` forum, `1e` dashboard, `1f` upload form, `1g` profile).
-- `design/support.js` — runtime the reference file needs in order to render. Not part of the
-  deliverable.
+- `design/Tapir Marketplace Wireframes.dc.html` — all nine screens on one pan/zoom canvas.
+  Turn 2 at the top: `2a` home and `2b` script detail, high fidelity in Modernist. Turn 1
+  below: `1a` site map, `1b` home, `1c` script detail, `1d` forum, `1e` dashboard,
+  `1f` upload form, `1g` profile, all low fidelity.
+- `design/support.js` and `design/_ds/…` — runtime and stylesheet the reference file needs in
+  order to render. Not part of the deliverable.
 - `design-system/styles.css` — Modernist tokens and component layer. This is the styling
   source of truth.
+- `design-system/_ds_bundle.js` — the Modernist components.
 - `design-system/readme.md` — Modernist usage guide.
 - `assets/tapir-logo.png` — brand mark.

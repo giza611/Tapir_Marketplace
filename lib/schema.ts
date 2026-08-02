@@ -195,8 +195,11 @@ export const authorSchema = z
   .object({
     name: z.string().min(1).max(120),
     company: z.string().max(120).optional(),
+    city: z.string().max(80).optional(),
     email: z.email().optional(),
     website: z.url().optional(),
+    /** Shown on the contributor's profile page. Plain text, not markdown. */
+    bio: z.string().max(400).optional(),
     social: socialSchema.optional(),
   })
   .strict()

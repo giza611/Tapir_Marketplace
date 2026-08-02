@@ -129,10 +129,10 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
     <div className="flex">
       <nav
         aria-label="Categories"
-        className="hidden w-[216px] shrink-0 border-r border-border px-[18px] py-5 md:block"
+        className="hidden w-[230px] shrink-0 border-r-2 border-border-strong py-6 pl-6 pr-5 md:block"
       >
         <p className="label-kicker">Category</p>
-        <ul className="mt-2.5">
+        <ul className="mt-3">
           <RailRow
             label="All"
             count={entries.length}
@@ -151,8 +151,8 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
         </ul>
       </nav>
 
-      <div className="min-w-0 flex-1 px-5 py-5 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="min-w-0 flex-1 py-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-6">
           <p className="text-[12px] text-text-muted">
             {visible.length} {visible.length === 1 ? 'script' : 'scripts'} in {activeLabel}
             {query.trim() && (
@@ -178,7 +178,8 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
                   }
                   className={
                     sort === key && !query.trim()
-                      ? 'tag tag-outline cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
+                      ? // Active chip is a solid accent fill with ground-coloured text.
+                        'tag cursor-pointer border border-accent bg-accent text-accent-fg disabled:cursor-not-allowed disabled:opacity-45'
                       : 'tag tag-quiet cursor-pointer hover:border-border-strong disabled:cursor-not-allowed disabled:opacity-45'
                   }
                 >
@@ -191,7 +192,7 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
 
         {/* Mobile category select. The design is desktop-first at 1280px, but a
             rail hidden below md would otherwise strand the filter entirely. */}
-        <label className="mt-4 block md:hidden">
+        <label className="mt-4 block px-6 md:hidden">
           <span className="sr-only">Category</span>
           <select
             value={category}
@@ -213,7 +214,9 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
             onReset={() => router.push(pathname, { scroll: false })}
           />
         ) : (
-          <div className="mt-4 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          // One continuous ruled surface: the container draws the left and top
+          // rules, each cell draws its own right and bottom rule.
+          <div className="mt-5 grid grid-cols-1 border-t border-border sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((entry) => (
               <ListingCard key={entry.slug} listing={entry} />
             ))}
@@ -242,14 +245,12 @@ function RailRow({
         onClick={onSelect}
         aria-current={active ? 'true' : undefined}
         className={[
-          'flex w-full items-center justify-between gap-2 px-2 py-[5px] text-left text-[12px]',
-          active
-            ? 'border border-accent bg-accent-subtle text-accent-800'
-            : 'border border-transparent text-text-muted hover:bg-surface-2 hover:text-text',
+          'flex w-full items-center justify-between gap-2 border-b border-border py-2 text-left text-[13px] transition-colors',
+          active ? 'font-semibold text-accent' : 'text-text-muted hover:text-text',
         ].join(' ')}
       >
         <span className="truncate">{label}</span>
-        <span className="shrink-0 text-[10.5px] tabular-nums">{count}</span>
+        <span className="shrink-0 text-[11px] tabular-nums text-text-subtle">{count}</span>
       </button>
     </li>
   )
