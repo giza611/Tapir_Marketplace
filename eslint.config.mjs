@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Design handoff export: reference material we read, not code we ship.
+    // It is third-party generated and lints with errors that are not ours to fix.
+    "Tapir Scripts Marketplace/**",
+    "docs/design/**",
   ]),
 ]);
 
