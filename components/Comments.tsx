@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
-import { GISCUS, REPO_URL, isGiscusConfigured } from '@/lib/site'
+import { GISCUS, GISCUS_THEME_URL, REPO_URL, isGiscusConfigured } from '@/lib/site'
 
 /**
  * Comments, powered by GitHub Discussions through giscus.
@@ -51,26 +51,16 @@ export function Comments({
     script.setAttribute('data-input-position', 'top')
     script.setAttribute('data-lang', 'en')
     script.setAttribute('data-loading', 'lazy')
-    script.setAttribute(
-      'data-theme',
-      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark_dimmed' : 'light',
-    )
+    // A custom theme rather than a preset: the stock ones draw every comment as
+    // a rounded, shadowed card, which the design system forbids. This one
+    // restates the marketplace tokens in Primer's vocabulary and flattens the
+    // thread into ruled blocks. Pinned to light — the site has no dark mode, so
+    // following the OS produced a dark widget on a light page.
+    script.setAttribute('data-theme', GISCUS_THEME_URL)
 
     container.appendChild(script)
 
-    // Keep the embedded iframe in step if the OS theme flips while reading.
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-    const onThemeChange = (event: MediaQueryListEvent) => {
-      const frame = container.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
-      frame?.contentWindow?.postMessage(
-        { giscus: { setConfig: { theme: event.matches ? 'dark_dimmed' : 'light' } } },
-        'https://giscus.app',
-      )
-    }
-    media.addEventListener('change', onThemeChange)
-
     return () => {
-      media.removeEventListener('change', onThemeChange)
       container.innerHTML = ''
     }
   }, [term, mapping])

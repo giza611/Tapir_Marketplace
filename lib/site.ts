@@ -70,6 +70,18 @@ export const GISCUS = {
 
 export const isGiscusConfigured = Boolean(GISCUS.repoId && GISCUS.categoryId)
 
+/**
+ * Absolute URL of the custom giscus theme in public/giscus.css.
+ *
+ * giscus loads this inside its own iframe, so it has to be a public https URL —
+ * a localhost path cannot be fetched from an https iframe. Development
+ * therefore points at the deployed stylesheet, which is fine because the theme
+ * changes far less often than the code around it.
+ */
+export const GISCUS_THEME_URL = `${
+  SITE.url.startsWith('https://') ? SITE.url : 'https://tapir-marketplace.vercel.app'
+}/giscus.css`
+
 /** Deep link to GitHub's new-discussion form, used by the forum's compose button. */
 export function newDiscussionUrl(category?: string): string {
   const base = `${REPO_URL}/discussions/new`

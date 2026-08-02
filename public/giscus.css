@@ -1,0 +1,137 @@
+/*
+ * Modernist theme for giscus.
+ *
+ * giscus themes work by setting GitHub Primer's CSS variables inside the
+ * widget's iframe, so this restates the marketplace's tokens in Primer's
+ * vocabulary and then flattens the parts Primer draws as raised, rounded
+ * cards. The design system forbids rounded corners and floating boxes, and the
+ * stock giscus themes are built entirely out of both.
+ *
+ * Referenced by components/Comments.tsx as an absolute URL. Keep the values in
+ * step with app/globals.css — there is no way to share variables across an
+ * iframe boundary, so these are duplicated on purpose.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap');
+
+main {
+  /* Surfaces and text */
+  --color-canvas-default: #f3f2f2;
+  --color-canvas-overlay: #f3f2f2;
+  --color-canvas-inset: #eae9e9;
+  --color-canvas-subtle: #eae9e9;
+  --color-fg-default: #201e1d;
+  --color-fg-muted: #63615f;
+  --color-fg-subtle: #86837f;
+
+  /* Rules. Primer uses these for every divider in the thread. */
+  --color-border-default: #cbc9c7;
+  --color-border-muted: #dedcda;
+  --color-neutral-muted: #201e1d14;
+
+  /* Accent — Tapir blue, replacing Primer's default link blue */
+  --color-accent-fg: #295da3;
+  --color-accent-emphasis: #2977c9;
+  --color-accent-muted: #2977c966;
+  --color-accent-subtle: #dde9f8;
+
+  /* Buttons. The primary action is GitHub green out of the box. */
+  --color-btn-text: #201e1d;
+  --color-btn-bg: #eae9e9;
+  --color-btn-border: #cbc9c7;
+  --color-btn-shadow: none;
+  --color-btn-inset-shadow: none;
+  --color-btn-hover-bg: #dedcda;
+  --color-btn-hover-border: #201e1d66;
+  --color-btn-active-bg: #d4d2d0;
+  --color-btn-selected-bg: #dedcda;
+
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #2977c9;
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-shadow: none;
+  --color-btn-primary-inset-shadow: none;
+  --color-btn-primary-hover-bg: #295da3;
+  --color-btn-primary-selected-bg: #1e4274;
+  --color-btn-primary-disabled-text: #ffffffcc;
+  --color-btn-primary-disabled-bg: #91bbf0;
+  --color-btn-primary-disabled-border: transparent;
+
+  --color-social-reaction-bg-hover: #dde9f8;
+  --color-social-reaction-bg-reacted-hover: #bfd7f4;
+
+  --color-success-fg: #295da3;
+  --color-danger-fg: #ae1800;
+  --color-danger-muted: #ec301366;
+  --color-danger-subtle: #fff2ef;
+  --color-attention-fg: #7c1405;
+  --color-attention-subtle: #fff2ef;
+
+  --color-primer-shadow-inset: none;
+
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+/*
+ * Flatten it. Everything below removes a corner radius or a shadow that the
+ * stock themes rely on — this is what turns the boxed replies in the default
+ * look into a ruled list.
+ */
+main *,
+main *::before,
+main *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Avatars stay circular; the design specifies round avatars everywhere else. */
+main .gsc-comment-author-avatar img,
+main .gsc-reply-author-avatar img,
+main img.avatar,
+main img[class*='rounded-full'] {
+  border-radius: 50% !important;
+}
+
+/* A comment becomes a ruled block rather than a card. */
+main .gsc-comment > div {
+  border: 0 !important;
+  border-top: 1px solid var(--color-border-muted) !important;
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Replies indent behind a 2px left rule, per the handoff. */
+main .gsc-replies {
+  border-top: 0 !important;
+  background: transparent !important;
+  padding-left: 14px !important;
+  border-left: 2px solid var(--color-border-default) !important;
+  margin-left: 14px !important;
+}
+
+/* The composer keeps a visible edge so it reads as an input. */
+main .gsc-comment-box {
+  border: 1px solid var(--color-border-default) !important;
+  background: #eae9e9 !important;
+}
+main .gsc-comment-box-tabs {
+  border-bottom: 1px solid var(--color-border-default) !important;
+}
+
+main .gsc-header,
+main .gsc-comments > .gsc-header {
+  border-bottom: 2px solid #201e1d66 !important;
+  padding-bottom: 8px;
+}
+
+main .gsc-timeline {
+  gap: 0 !important;
+}
+
+/* Primer's focus ring is a soft blue glow; the system asks for a hard outline. */
+main *:focus-visible {
+  outline: 2px solid #2977c9 !important;
+  outline-offset: 2px !important;
+}
