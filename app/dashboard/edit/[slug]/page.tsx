@@ -35,7 +35,7 @@ export default async function EditListingPage({ params }: { params: Promise<{ sl
         </p>
         <Link
           href={`/scripts/${listing.slug}`}
-          className="mt-6 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+          className="mt-6 inline-block bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
         >
           Open the listing
         </Link>

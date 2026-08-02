@@ -65,7 +65,7 @@ export function Comments({ term }: { term: string }) {
 
   if (!isGiscusConfigured) {
     return (
-      <div className="rounded-card border border-dashed border-border bg-surface-2 p-6 text-sm">
+      <div className="border border-dashed border-border bg-surface-2 p-6 text-sm">
         <p className="font-medium">Comments are not configured yet</p>
         <p className="mt-1.5 leading-relaxed text-text-muted">
           Enable Discussions on{' '}

@@ -21,7 +21,7 @@ export default function SubmitPage() {
         whoever runs this site — can quietly change or remove your work.
       </p>
 
-      <p className="mt-5 rounded-card border border-border bg-surface-2 px-5 py-4 text-sm leading-relaxed text-text-muted">
+      <p className="mt-5 border border-border bg-surface-2 px-5 py-4 text-sm leading-relaxed text-text-muted">
         <strong className="text-text">You need a free GitHub account to publish.</strong>{' '}
         Downloading and browsing need no account at all. Publishing does, because your listing is
         committed to a public repository under your own name — that is what lets you edit or remove
@@ -40,7 +40,7 @@ export default function SubmitPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/dashboard/new"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+          className="inline-flex items-center gap-1.5 bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
         >
           Start now
           <ArrowRight size={15} aria-hidden />
@@ -49,7 +49,7 @@ export default function SubmitPage() {
           href={REPO_URL}
           target="_blank"
           rel="noreferrer"
-          className="rounded-lg border border-border bg-surface px-5 py-2.5 text-sm font-medium transition-colors hover:border-border-strong"
+          className="border border-border bg-surface px-5 py-2.5 text-sm font-medium transition-colors hover:border-border-strong"
         >
           Or submit a pull request by hand
         </a>
@@ -100,7 +100,7 @@ export default function SubmitPage() {
         </ul>
       </section>
 
-      <section className="mt-14 rounded-card border border-border bg-surface-2 p-6">
+      <section className="mt-14 border border-border bg-surface-2 p-6">
         <h2 className="text-lg font-semibold tracking-tight">Charging for your work</h2>
         <p className="mt-2.5 leading-relaxed text-text-muted">
           You can list a script as free, free with a contribution link, or paid. In every case the
@@ -127,7 +127,7 @@ function Step({
 }) {
   return (
     <li className="flex gap-4">
-      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent-border bg-accent-subtle text-accent">
+      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-accent-border bg-accent-subtle text-accent">
         {icon}
       </span>
       <div>

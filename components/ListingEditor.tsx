@@ -209,7 +209,7 @@ export function ListingEditor({ login, initial, today }: Props) {
 
   if (success) {
     return (
-      <div className="rounded-card border border-accent-border bg-accent-subtle p-6">
+      <div className="border border-accent-border bg-accent-subtle p-6">
         <CheckCircle2 size={22} aria-hidden className="text-accent" />
         <h2 className="mt-3 text-lg font-semibold">Submitted</h2>
         <p className="mt-2 max-w-lg leading-relaxed text-text-muted">
@@ -220,7 +220,7 @@ export function ListingEditor({ login, initial, today }: Props) {
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
             href="/dashboard"
-            className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+            className="bg-accent px-4 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
           >
             Back to my listings
           </Link>
@@ -228,7 +228,7 @@ export function ListingEditor({ login, initial, today }: Props) {
             href={success.url}
             target="_blank"
             rel="noreferrer"
-            className="rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium transition-colors hover:border-border-strong"
+            className="border border-border bg-surface px-4 py-2.5 text-sm font-medium transition-colors hover:border-border-strong"
           >
             Track it on GitHub
           </a>
@@ -240,7 +240,7 @@ export function ListingEditor({ login, initial, today }: Props) {
   return (
     <form onSubmit={onSubmit} className="space-y-9">
       {errors.length > 0 && (
-        <div className="rounded-card border border-border bg-danger-subtle p-4">
+        <div className="border border-border bg-danger-subtle p-4">
           <p className="flex items-center gap-2 font-medium text-danger">
             <AlertCircle size={16} aria-hidden />
             This listing is not ready yet
@@ -353,7 +353,7 @@ export function ListingEditor({ login, initial, today }: Props) {
       >
         <div className="space-y-4">
           {versions.map((version, index) => (
-            <div key={index} className="rounded-card border border-border bg-surface-2 p-4">
+            <div key={index} className="border border-border bg-surface-2 p-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium">Version {index + 1}</p>
                 {versions.length > 1 && (
@@ -453,7 +453,7 @@ export function ListingEditor({ login, initial, today }: Props) {
               ...current,
             ])
           }
-          className="mt-3 flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:border-border-strong"
+          className="mt-3 flex items-center gap-1.5 border border-border px-3 py-2 text-sm transition-colors hover:border-border-strong"
         >
           <Plus size={14} aria-hidden />
           Add a version
@@ -495,7 +495,7 @@ export function ListingEditor({ login, initial, today }: Props) {
           </div>
         )}
 
-        <label className="flex cursor-pointer items-center justify-center gap-2 rounded-card border border-dashed border-border bg-surface-2 px-4 py-8 text-sm text-text-muted transition-colors hover:border-border-strong">
+        <label className="flex cursor-pointer items-center justify-center gap-2 border border-dashed border-border bg-surface-2 px-4 py-8 text-sm text-text-muted transition-colors hover:border-border-strong">
           <Upload size={15} aria-hidden />
           Choose images
           <input
@@ -625,14 +625,14 @@ export function ListingEditor({ login, initial, today }: Props) {
         <button
           type="submit"
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover disabled:opacity-60"
+          className="inline-flex items-center gap-2 bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover disabled:opacity-60"
         >
           {busy && <Loader2 size={15} aria-hidden className="animate-spin" />}
           {busy ? 'Submitting…' : isEdit ? 'Submit changes' : 'Publish listing'}
         </button>
         <Link
           href="/dashboard"
-          className="rounded-lg border border-border px-4 py-2.5 text-sm transition-colors hover:border-border-strong"
+          className="border border-border px-4 py-2.5 text-sm transition-colors hover:border-border-strong"
         >
           Cancel
         </Link>
@@ -645,7 +645,7 @@ export function ListingEditor({ login, initial, today }: Props) {
 }
 
 const inputClass =
-  'w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text placeholder:text-text-subtle focus:border-accent focus:outline-none disabled:opacity-60'
+  'w-full border border-border bg-surface px-3 py-2.5 text-sm text-text placeholder:text-text-subtle focus:border-accent focus:outline-none disabled:opacity-60'
 
 function Section({
   title,
@@ -692,7 +692,7 @@ function Thumb({ src, onRemove }: { src: string; onRemove: () => void }) {
   return (
     <div className="relative">
       {/* eslint-disable-next-line @next/next/no-img-element -- object URLs and local files */}
-      <img src={src} alt="" className="aspect-[4/3] w-full rounded-lg border border-border object-cover" />
+      <img src={src} alt="" className="aspect-[4/3] w-full border border-border object-cover" />
       <button
         type="button"
         onClick={onRemove}

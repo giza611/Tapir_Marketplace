@@ -1,59 +1,60 @@
 'use client'
 
 import MiniSearch from 'minisearch'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
-import { useDeferredValue, useMemo, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
 
 import { ListingCard } from '@/components/ListingCard'
 import {
   CATEGORIES,
   CATEGORY_LABELS,
-  LISTING_TYPES,
-  LISTING_TYPE_LABELS,
   type Category,
-  type ListingType,
   type ResolvedListing,
 } from '@/lib/schema'
 
 type Entry = Omit<ResolvedListing, 'readme'>
 
 const SORTS = {
-  newest: 'Newest first',
-  oldest: 'Oldest first',
-  downloads: 'Most downloaded',
-  rating: 'Highest rated',
-  name: 'Name (A–Z)',
+  newest: 'Newest',
+  oldest: 'Oldest',
+  rating: 'Rating',
+  downloads: 'Downloads',
 } as const
 
 type SortKey = keyof typeof SORTS
 
 /**
- * The entire browse experience runs in the browser against a JSON payload
- * baked in at build time. No API, no database, no loading spinner — and it
- * keeps working if every service this project depends on goes down.
+ * The browse experience: a fixed category rail, sort chips and the card grid.
+ *
+ * All state lives in the URL (`?category=&sort=&q=`), as the handoff requires,
+ * so a filtered view is shareable and the back button works. Filtering itself
+ * runs in the browser against a JSON payload baked in at build time — no API,
+ * no database, and it keeps working if every service this project depends on
+ * goes down.
  *
  * That holds while the catalogue is in the hundreds. Past a few thousand
  * listings the payload becomes the bottleneck and this should move to
  * paginated static pages per category.
  */
 export function CatalogBrowser({ entries }: { entries: Entry[] }) {
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<Category | 'all'>('all')
-  const [type, setType] = useState<ListingType | 'all'>('all')
-  const [archicad, setArchicad] = useState<string>('all')
-  const [sort, setSort] = useState<SortKey>('newest')
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-  // Keeps typing responsive: the input updates every keystroke while the
-  // (more expensive) search and re-render can lag a frame behind.
-  const deferredQuery = useDeferredValue(query)
+  const category = (searchParams.get('category') ?? 'all') as Category | 'all'
+  const sort = (searchParams.get('sort') ?? 'newest') as SortKey
+  const query = searchParams.get('q') ?? ''
 
-  const archicadOptions = useMemo(() => {
-    const all = new Set<string>()
-    for (const entry of entries) {
-      for (const version of entry.supportedArchicadVersions) all.add(version)
-    }
-    return [...all].sort((a, b) => Number(b) - Number(a))
-  }, [entries])
+  const setParam = useCallback(
+    (key: string, value: string | null) => {
+      const next = new URLSearchParams(searchParams.toString())
+      if (value === null || value === '' || value === 'all') next.delete(key)
+      else next.set(key, value)
+      const search = next.toString()
+      router.push(search ? `${pathname}?${search}` : pathname, { scroll: false })
+    },
+    [pathname, router, searchParams],
+  )
 
   const index = useMemo(() => {
     const search = new MiniSearch<{
@@ -81,11 +82,20 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
     return search
   }, [entries])
 
+  /** Counts ignore the active category so the rail shows the whole catalogue. */
+  const counts = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const entry of entries) {
+      map.set(entry.category, (map.get(entry.category) ?? 0) + 1)
+    }
+    return map
+  }, [entries])
+
   const visible = useMemo(() => {
     let result = entries
 
-    const trimmed = deferredQuery.trim()
-    if (trimmed.length > 0) {
+    const trimmed = query.trim()
+    if (trimmed) {
       const ranked = index.search(trimmed)
       const order = new Map(ranked.map((hit, position) => [hit.id as string, position]))
       result = result
@@ -94,13 +104,9 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
     }
 
     if (category !== 'all') result = result.filter((entry) => entry.category === category)
-    if (type !== 'all') result = result.filter((entry) => entry.type === type)
-    if (archicad !== 'all') {
-      result = result.filter((entry) => entry.supportedArchicadVersions.includes(archicad))
-    }
 
     // A search ranks by relevance; imposing a sort on top would throw that away.
-    if (trimmed.length > 0) return result
+    if (trimmed) return result
 
     return [...result].sort((a, b) => {
       switch (sort) {
@@ -110,173 +116,155 @@ export function CatalogBrowser({ entries }: { entries: Entry[] }) {
           return b.stats.downloads - a.stats.downloads
         case 'rating':
           return b.stats.reactions - a.stats.reactions
-        case 'name':
-          return a.name.localeCompare(b.name)
         case 'newest':
         default:
           return b.latestVersion.releasedAt.localeCompare(a.latestVersion.releasedAt)
       }
     })
-  }, [entries, deferredQuery, index, category, type, archicad, sort])
+  }, [entries, query, index, category, sort])
 
-  const filtersActive = category !== 'all' || type !== 'all' || archicad !== 'all'
-
-  function clearFilters() {
-    setCategory('all')
-    setType('all')
-    setArchicad('all')
-  }
+  const activeLabel = category === 'all' ? 'All' : CATEGORY_LABELS[category]
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <div className="relative flex-1">
-          <Search
-            size={16}
-            aria-hidden
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-subtle"
+    <div className="flex">
+      <nav
+        aria-label="Categories"
+        className="hidden w-[216px] shrink-0 border-r border-border px-[18px] py-5 md:block"
+      >
+        <p className="label-kicker">Category</p>
+        <ul className="mt-2.5">
+          <RailRow
+            label="All"
+            count={entries.length}
+            active={category === 'all'}
+            onSelect={() => setParam('category', null)}
           />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search scripts, tags or authors…"
-            aria-label="Search the marketplace"
-            className="w-full rounded-lg border border-border bg-surface py-2.5 pl-9 pr-3 text-sm placeholder:text-text-subtle focus:border-accent focus:outline-none"
-          />
+          {CATEGORIES.map((value) => (
+            <RailRow
+              key={value}
+              label={CATEGORY_LABELS[value]}
+              count={counts.get(value) ?? 0}
+              active={category === value}
+              onSelect={() => setParam('category', value)}
+            />
+          ))}
+        </ul>
+      </nav>
+
+      <div className="min-w-0 flex-1 px-5 py-5 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-[12px] text-text-muted">
+            {visible.length} {visible.length === 1 ? 'script' : 'scripts'} in {activeLabel}
+            {query.trim() && (
+              <>
+                {' '}
+                matching <span className="text-text">“{query.trim()}”</span>
+              </>
+            )}
+          </p>
+
+          <div className="flex items-center gap-2">
+            <span className="label-kicker">Sort</span>
+            <div className="flex flex-wrap gap-1.5">
+              {(Object.keys(SORTS) as SortKey[]).map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setParam('sort', key === 'newest' ? null : key)}
+                  disabled={Boolean(query.trim())}
+                  aria-pressed={sort === key}
+                  title={
+                    query.trim() ? 'Results are ranked by relevance while searching' : undefined
+                  }
+                  className={
+                    sort === key && !query.trim()
+                      ? 'tag tag-outline cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
+                      : 'tag tag-quiet cursor-pointer hover:border-border-strong disabled:cursor-not-allowed disabled:opacity-45'
+                  }
+                >
+                  {SORTS[key]}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Select
-            label="Category"
+        {/* Mobile category select. The design is desktop-first at 1280px, but a
+            rail hidden below md would otherwise strand the filter entirely. */}
+        <label className="mt-4 block md:hidden">
+          <span className="sr-only">Category</span>
+          <select
             value={category}
-            onChange={(value) => setCategory(value as Category | 'all')}
-            options={[
-              { value: 'all', label: 'All categories' },
-              ...CATEGORIES.map((value) => ({ value, label: CATEGORY_LABELS[value] })),
-            ]}
-          />
-          <Select
-            label="Type"
-            value={type}
-            onChange={(value) => setType(value as ListingType | 'all')}
-            options={[
-              { value: 'all', label: 'All types' },
-              ...LISTING_TYPES.map((value) => ({ value, label: LISTING_TYPE_LABELS[value] })),
-            ]}
-          />
-          <Select
-            label="Archicad version"
-            value={archicad}
-            onChange={setArchicad}
-            options={[
-              { value: 'all', label: 'Any Archicad' },
-              ...archicadOptions.map((value) => ({ value, label: `Archicad ${value}` })),
-            ]}
-          />
-          <Select
-            label="Sort by"
-            value={sort}
-            onChange={(value) => setSort(value as SortKey)}
-            disabled={deferredQuery.trim().length > 0}
-            options={Object.entries(SORTS).map(([value, label]) => ({ value, label }))}
-          />
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center gap-3 text-sm text-text-muted">
-        <span>
-          {visible.length} {visible.length === 1 ? 'script' : 'scripts'}
-          {filtersActive || deferredQuery.trim() ? ` of ${entries.length}` : ''}
-        </span>
-        {filtersActive && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-accent transition-colors hover:bg-accent-subtle"
+            onChange={(event) => setParam('category', event.target.value)}
+            className="input"
           >
-            <X size={12} aria-hidden />
-            Clear filters
-          </button>
+            <option value="all">All categories ({entries.length})</option>
+            {CATEGORIES.map((value) => (
+              <option key={value} value={value}>
+                {CATEGORY_LABELS[value]} ({counts.get(value) ?? 0})
+              </option>
+            ))}
+          </select>
+        </label>
+
+        {visible.length === 0 ? (
+          <EmptyState
+            hasQuery={Boolean(query.trim())}
+            onReset={() => router.push(pathname, { scroll: false })}
+          />
+        ) : (
+          <div className="mt-4 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+            {visible.map((entry) => (
+              <ListingCard key={entry.slug} listing={entry} />
+            ))}
+          </div>
         )}
       </div>
-
-      {visible.length === 0 ? (
-        <EmptyState
-          hasQuery={deferredQuery.trim().length > 0}
-          onClear={() => {
-            setQuery('')
-            clearFilters()
-          }}
-        />
-      ) : (
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((entry) => (
-            <ListingCard key={entry.slug} listing={entry} />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
 
-function Select({
+function RailRow({
   label,
-  value,
-  onChange,
-  options,
-  disabled,
+  count,
+  active,
+  onSelect,
 }: {
   label: string
-  value: string
-  onChange: (value: string) => void
-  options: { value: string; label: string }[]
-  disabled?: boolean
+  count: number
+  active: boolean
+  onSelect: () => void
 }) {
   return (
-    <label className="relative">
-      <span className="sr-only">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        disabled={disabled}
-        title={disabled ? 'Results are ranked by relevance while searching' : label}
-        className="appearance-none rounded-lg border border-border bg-surface py-2.5 pl-3 pr-8 text-sm text-text transition-colors hover:border-border-strong focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+    <li>
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-current={active ? 'true' : undefined}
+        className={[
+          'flex w-full items-center justify-between gap-2 px-2 py-[5px] text-left text-[12px]',
+          active
+            ? 'border border-accent bg-accent-subtle text-accent-800'
+            : 'border border-transparent text-text-muted hover:bg-surface-2 hover:text-text',
+        ].join(' ')}
       >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <svg
-        aria-hidden
-        width="10"
-        height="6"
-        viewBox="0 0 10 6"
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 fill-none stroke-current text-text-subtle"
-      >
-        <path d="M1 1l4 4 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </label>
+        <span className="truncate">{label}</span>
+        <span className="shrink-0 text-[10.5px] tabular-nums">{count}</span>
+      </button>
+    </li>
   )
 }
 
-function EmptyState({ hasQuery, onClear }: { hasQuery: boolean; onClear: () => void }) {
+function EmptyState({ hasQuery, onReset }: { hasQuery: boolean; onReset: () => void }) {
   return (
-    <div className="mt-6 rounded-card border border-dashed border-border bg-surface-2 px-6 py-16 text-center">
-      <SlidersHorizontal size={22} aria-hidden className="mx-auto text-text-subtle" />
-      <p className="mt-3 font-medium">Nothing matches that yet</p>
-      <p className="mx-auto mt-1 max-w-sm text-sm text-text-muted">
+    <div className="mt-4 border border-border bg-surface px-6 py-14 text-center">
+      <p className="font-heading text-[16px]">Nothing matches that yet</p>
+      <p className="mx-auto mt-1.5 max-w-sm text-[12px] leading-relaxed text-text-muted">
         {hasQuery
           ? 'Try a broader search term, or clear the filters to see the whole catalogue.'
-          : 'No listings match these filters. Clear them to see everything.'}
+          : 'No listings in this category yet. Clear the filter to see everything.'}
       </p>
-      <button
-        type="button"
-        onClick={onClear}
-        className="mt-4 rounded-lg border border-border bg-surface px-3.5 py-2 text-sm font-medium transition-colors hover:border-border-strong"
-      >
+      <button type="button" onClick={onReset} className="btn btn-secondary btn-centered mt-4">
         Reset
       </button>
     </div>

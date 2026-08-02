@@ -27,8 +27,10 @@ export const REPO_SLUG = `${REPO_OWNER}/${REPO_NAME}`
 export const REPO_URL = `https://github.com/${REPO_SLUG}`
 
 export const SITE = {
-  name: 'Tapir Marketplace',
-  tagline: 'Scripts and add-ons for Archicad, shared by the people who wrote them',
+  /** The wordmark. Capitalised this way on purpose: tAPIr contains "API". */
+  name: 'tAPIr',
+  fullName: 'tAPIr Scripts Marketplace',
+  tagline: 'scripts and add-ons, shared by the Archicad community',
   description:
     'A community marketplace for Tapir scripts and Archicad add-ons. Browse, download and discuss automation tools built by architects and developers.',
   url: env('NEXT_PUBLIC_SITE_URL') ?? 'https://tapir-marketplace.vercel.app',

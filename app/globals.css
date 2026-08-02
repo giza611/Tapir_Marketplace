@@ -1,129 +1,159 @@
 @import "tailwindcss";
 
 /*
- * Design tokens.
+ * Modernist — the design system from docs/design/handoff/design-system/.
  *
- * Every colour, radius and shadow in the app resolves back to a variable
- * declared here. When the Claude Design mockup lands, restyling the site means
- * replacing values in this block — not touching component files.
+ * That folder is the source of truth for the look. Values here are ported from
+ * its styles.css; retune there first, then mirror. Never hard-code a hex, a
+ * radius or a spacing value that a token already carries.
+ *
+ * Deliberate properties of this system, from its readme:
+ *   - Zero border radius anywhere. --radius-* are 0 on purpose.
+ *   - Strong 2px dividers between major sections; a visible modular grid.
+ *   - Everything flush left, including labels inside wide buttons.
+ *   - The accent is used sparingly: the primary action and small emphasis.
+ *
+ * Light ground only. The dark theme that existed before this restyle was
+ * removed on request, so the site ships exactly the one ground the system
+ * specifies rather than a derived variant.
  */
 
 :root {
-  /* Surfaces, from furthest back to closest to the reader */
-  --bg: #fbfbfa;
-  --surface: #ffffff;
-  --surface-2: #f4f4f2;
-  --surface-3: #ebebe8;
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
+  /* A lighter rule for the 1px hairlines inside components; the token above is
+     the strong 2px section divider. */
+  --color-hairline: color-mix(in srgb, #201e1d 20%, transparent);
 
-  --border: #e2e2de;
-  --border-strong: #cfcfc9;
+  /* Tonal ramps, generated in OKLCH on one shared lightness scale. */
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
 
-  --text: #171a17;
-  --text-muted: #63665f;
-  --text-subtle: #8b8e86;
+  --color-accent-100: #fff2ef;
+  --color-accent-200: #ffe0d9;
+  --color-accent-300: #ffc4b8;
+  --color-accent-400: #ff9783;
+  --color-accent-500: #ff563c;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
+  --color-accent-800: #7c1405;
+  --color-accent-900: #4d170e;
 
-  /* Teal reads technical without the default-bootstrap feel of blue. */
-  --accent: #0f766e;
-  --accent-hover: #0c5f58;
-  --accent-fg: #ffffff;
-  --accent-subtle: #e6f2f0;
-  --accent-border: #a7d3cd;
+  /* Roles the app refers to, resolved from the ramps above. */
+  --text-muted: color-mix(in srgb, #201e1d 55%, transparent);
+  --text-subtle: color-mix(in srgb, #201e1d 40%, transparent);
 
-  /* Reserved for paid and donation states, so money never reads as "primary". */
-  --highlight: #b45309;
-  --highlight-subtle: #fdf3e7;
-  --highlight-border: #edd0a8;
+  --font-heading: var(--font-archivo), system-ui, sans-serif;
+  --font-heading-weight: 800;
+  --font-body: var(--font-archivo), system-ui, sans-serif;
 
-  --danger: #b42318;
-  --danger-subtle: #fdeceb;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
 
-  --radius: 0.75rem;
-  --radius-sm: 0.5rem;
-  --radius-lg: 1.25rem;
-
-  --shadow-sm: 0 1px 2px rgb(23 26 23 / 0.05);
-  --shadow: 0 1px 3px rgb(23 26 23 / 0.07), 0 8px 24px -12px rgb(23 26 23 / 0.12);
-  --shadow-lg: 0 2px 6px rgb(23 26 23 / 0.06), 0 24px 48px -20px rgb(23 26 23 / 0.22);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0c0e0c;
-    --surface: #141714;
-    --surface-2: #1b1f1b;
-    --surface-3: #242924;
-
-    --border: #262b26;
-    --border-strong: #39403a;
-
-    --text: #ecefea;
-    --text-muted: #a0a69d;
-    --text-subtle: #767d74;
-
-    --accent: #2dd4bf;
-    --accent-hover: #5eead4;
-    --accent-fg: #06231f;
-    --accent-subtle: #12312d;
-    --accent-border: #1d5a52;
-
-    --highlight: #fbbf24;
-    --highlight-subtle: #2e2410;
-    --highlight-border: #5c4715;
-
-    --danger: #fda29b;
-    --danger-subtle: #341714;
-
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-    --shadow: 0 1px 3px rgb(0 0 0 / 0.5), 0 8px 24px -12px rgb(0 0 0 / 0.6);
-    --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.5), 0 24px 48px -20px rgb(0 0 0 / 0.8);
-  }
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-surface-3: var(--surface-3);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-neutral-200);
+  --color-surface-3: var(--color-neutral-300);
 
-  --color-border: var(--border);
-  --color-border-strong: var(--border-strong);
+  --color-border: var(--color-hairline);
+  --color-border-strong: var(--color-divider);
 
-  --color-text: var(--text);
+  --color-text: var(--color-text);
   --color-text-muted: var(--text-muted);
   --color-text-subtle: var(--text-subtle);
 
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-fg: var(--accent-fg);
-  --color-accent-subtle: var(--accent-subtle);
-  --color-accent-border: var(--accent-border);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-600);
+  --color-accent-fg: var(--color-bg);
+  --color-accent-subtle: var(--color-accent-100);
+  --color-accent-border: var(--color-accent-300);
 
-  --color-highlight: var(--highlight);
-  --color-highlight-subtle: var(--highlight-subtle);
-  --color-highlight-border: var(--highlight-border);
+  /* The system is mono: there is no second accent. Money-related emphasis uses
+     deep steps of the same ramp so it reads as emphasis, not a new colour. */
+  --color-highlight: var(--color-accent-700);
+  --color-highlight-subtle: var(--color-accent-100);
+  --color-highlight-border: var(--color-accent-300);
 
-  --color-danger: var(--danger);
-  --color-danger-subtle: var(--danger-subtle);
+  --color-danger: var(--color-accent-700);
+  --color-danger-subtle: var(--color-accent-100);
 
-  --radius-card: var(--radius);
-  --radius-pill: 9999px;
+  /* Zero radius, enforced at the scale so no utility can reintroduce a curve.
+     `rounded-full` is a separate static utility and still works — the design
+     specifies circular avatars and a circular brand mark. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  --radius-card: 0px;
+  --radius-pill: 0px;
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
 }
 
-/* Keyboard focus must stay obvious. This site is browsed by people evaluating
-   code they are about to run; hiding focus to look tidier is not a trade worth
-   making. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+/* Keyboard focus is themed, never the browser default. This site is browsed by
+   people evaluating code they are about to run; hiding focus to look tidier is
+   not a trade worth making. */
+:focus {
+  outline: none;
+}
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-  border-radius: 4px;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -137,35 +167,216 @@ body {
   }
 }
 
+/* ── Component layer, ported from the design system ─────────────────────── */
+
+/** The strong 2px section rule. */
+.hr {
+  height: 2px;
+  border: 0;
+  background: var(--color-divider);
+}
+
+.label-kicker {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  /* Flush left, per the system: a button wider than its label starts the text
+     at the left padding edge rather than centring it. */
+  justify-content: flex-start;
+  text-align: left;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+.btn-primary:hover {
+  background: var(--color-accent-600);
+}
+.btn-primary:active {
+  background: var(--color-accent-700);
+}
+.btn-secondary {
+  border-color: var(--color-divider);
+}
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+.btn-secondary:active {
+  background: color-mix(in srgb, var(--color-text) 14%, transparent);
+}
+.btn-ghost {
+  color: var(--color-accent-700);
+  padding-inline: var(--space-1);
+}
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
+}
+.btn-block {
+  width: 100%;
+}
+/* The one place centring is right: a button whose label is the whole point and
+   is already the width of its box. */
+.btn-centered {
+  justify-content: center;
+  text-align: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.tag-accent {
+  background: var(--color-accent-100);
+  color: var(--color-accent-800);
+}
+.tag-neutral {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-800);
+}
+.tag-outline {
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent-700);
+}
+.tag-quiet {
+  border: 1px solid var(--color-hairline);
+  color: var(--text-muted);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+}
+.card-interactive:hover {
+  border-color: var(--color-divider);
+}
+
+.input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+}
+.input::placeholder {
+  color: var(--text-subtle);
+}
+.input:hover {
+  border-color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+.input:focus-visible {
+  border-color: var(--color-accent);
+  outline-offset: 0;
+}
+textarea.input {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.field > label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.table th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  padding: var(--space-2);
+  border-bottom: 2px solid var(--color-divider);
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
+}
+.table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+/*
+ * The system asks for photographs to print in black and white.
+ *
+ * It is applied to the brand mark and decorative imagery, but deliberately NOT
+ * to listing screenshots: those are Archicad interface captures — dialogs,
+ * property values, colour-coded model elements — where desaturating destroys
+ * the information a visitor is trying to evaluate before downloading. Add the
+ * class to ScreenshotGallery and ListingCard if that call should be reversed.
+ */
+.grayscale-print {
+  filter: grayscale(1) contrast(1.08);
+}
+
 /*
  * Markdown rendered from a listing's README.md.
  *
- * Scoped to .prose-listing so contributor-authored content can never restyle
- * the surrounding page. react-markdown is configured without rehype-raw, so
- * raw HTML in a README is escaped rather than rendered.
+ * Scoped so contributor-authored content can never restyle the page around it.
+ * react-markdown runs without rehype-raw, so raw HTML here is escaped.
  */
 .prose-listing {
-  color: var(--text);
+  color: var(--color-text);
+  font-size: 13px;
   line-height: 1.7;
+  max-width: 66ch;
 }
 .prose-listing > * + * {
-  margin-top: 1rem;
+  margin-top: 0.9rem;
 }
 .prose-listing h2 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin-top: 2rem;
+  font-size: 16px;
+  margin-top: 1.75rem;
 }
 .prose-listing h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
+  font-size: 14px;
+  margin-top: 1.25rem;
 }
 .prose-listing a {
-  color: var(--accent);
+  color: var(--color-accent-700);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 .prose-listing ul,
 .prose-listing ol {
@@ -178,56 +389,48 @@ body {
   list-style: decimal;
 }
 .prose-listing li + li {
-  margin-top: 0.375rem;
+  margin-top: 0.3rem;
 }
 .prose-listing code {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.875em;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-neutral-200);
+  border: 1px solid var(--color-hairline);
   padding: 0.1em 0.35em;
 }
 .prose-listing pre {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
+  background: var(--color-neutral-200);
+  border: 1px solid var(--color-hairline);
+  padding: var(--space-3);
   overflow-x: auto;
 }
 .prose-listing pre code {
   background: none;
   border: none;
   padding: 0;
-  font-size: 0.8125rem;
+  font-size: 12px;
 }
 .prose-listing blockquote {
-  border-left: 3px solid var(--accent-border);
-  background: var(--accent-subtle);
-  padding: 0.75rem 1rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  color: var(--text-muted);
-}
-.prose-listing blockquote > * + * {
-  margin-top: 0.5rem;
+  border-left: 2px solid var(--color-accent);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent-100);
+  color: var(--color-accent-900);
 }
 .prose-listing table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 12px;
 }
 .prose-listing th,
 .prose-listing td {
-  border: 1px solid var(--border);
-  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-hairline);
+  padding: var(--space-2);
   text-align: left;
 }
 .prose-listing th {
-  background: var(--surface-2);
-  font-weight: 600;
+  background: var(--color-neutral-200);
 }
 .prose-listing img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-sm);
 }

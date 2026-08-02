@@ -1,5 +1,7 @@
 import clsx from 'clsx'
 
+import { archicadRange } from '@/components/ListingCard'
+
 type BadgeProps = {
   children: React.ReactNode
   tone?: 'neutral' | 'accent' | 'highlight' | 'outline'
@@ -7,30 +9,28 @@ type BadgeProps = {
   title?: string
 }
 
+/**
+ * Thin wrapper over the design system's `.tag`. Kept as a component so tone
+ * names stay stable across the app while the underlying classes come from
+ * globals.css rather than being re-invented per usage.
+ */
 const TONES: Record<NonNullable<BadgeProps['tone']>, string> = {
-  neutral: 'bg-surface-2 text-text-muted border-border',
-  accent: 'bg-accent-subtle text-accent border-accent-border',
-  highlight: 'bg-highlight-subtle text-highlight border-highlight-border',
-  outline: 'bg-transparent text-text-subtle border-border',
+  neutral: 'tag-neutral',
+  accent: 'tag-accent',
+  highlight: 'tag-outline',
+  outline: 'tag-quiet',
 }
 
 export function Badge({ children, tone = 'neutral', className, title }: BadgeProps) {
   return (
-    <span
-      title={title}
-      className={clsx(
-        'inline-flex items-center gap-1 rounded-pill border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
-        TONES[tone],
-        className,
-      )}
-    >
+    <span title={title} className={clsx('tag', TONES[tone], className)}>
       {children}
     </span>
   )
 }
 
 /**
- * Archicad compatibility, rendered as "AC 27, 28".
+ * Archicad compatibility, rendered as "AC 26-28".
  *
  * This is the first thing an architect checks and the most common reason a
  * download is wasted, so it earns a dedicated component and a spot on the card
@@ -40,7 +40,7 @@ export function ArchicadBadge({ versions }: { versions: string[] }) {
   if (versions.length === 0) return null
   return (
     <Badge tone="outline" title={`Works with Archicad ${versions.join(', ')}`}>
-      AC {versions.join(', ')}
+      {archicadRange(versions)}
     </Badge>
   )
 }

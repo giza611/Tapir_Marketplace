@@ -1,33 +1,48 @@
 'use client'
 
 import MiniSearch from 'minisearch'
-import { ArrowUpRight, CheckCircle2, MessageSquare, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
 
-import { Badge } from '@/components/Badge'
 import type { Discussion } from '@/lib/discussions'
 import { formatRelative } from '@/lib/format'
 
-type Filter = 'all' | 'topics' | 'listings'
-
 /**
- * One search box over every thread in the repository — free-standing forum
- * topics and per-listing comment threads alike. They are the same GitHub
+ * One searchable place for every conversation — free-standing forum topics and
+ * per-listing comment threads alike. They are the same GitHub Discussions
  * primitive, so unifying them costs nothing.
+ *
+ * `categoryBySlug` lets a script-bound thread display the listing's own
+ * category rather than the GitHub Discussions category it happens to live in,
+ * which is what the handoff's meta line format expects.
  */
 export function ForumBrowser({
   discussions,
-  categories,
+  categoryBySlug,
+  scriptNameBySlug,
 }: {
   discussions: Discussion[]
-  categories: string[]
+  categoryBySlug: Record<string, string>
+  scriptNameBySlug: Record<string, string>
 }) {
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('all')
-  const [kind, setKind] = useState<Filter>('all')
+  const [filter, setFilter] = useState('all')
 
   const deferredQuery = useDeferredValue(query)
+
+  function categoryOf(discussion: Discussion): string {
+    if (discussion.listingSlug) {
+      return categoryBySlug[discussion.listingSlug] ?? discussion.category
+    }
+    return discussion.category
+  }
+
+  const chips = useMemo(() => {
+    const present = new Set(discussions.map(categoryOf))
+    return ['all', ...[...present].sort()]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- categoryOf is derived from props above
+  }, [discussions, categoryBySlug])
 
   const index = useMemo(() => {
     const search = new MiniSearch<{ id: number; title: string; excerpt: string; author: string }>({
@@ -38,13 +53,15 @@ export function ForumBrowser({
     search.addAll(
       discussions.map((discussion) => ({
         id: discussion.number,
-        title: discussion.title,
+        title: discussion.listingSlug
+          ? (scriptNameBySlug[discussion.listingSlug] ?? discussion.title)
+          : discussion.title,
         excerpt: discussion.excerpt,
         author: discussion.author ?? '',
       })),
     )
     return search
-  }, [discussions])
+  }, [discussions, scriptNameBySlug])
 
   const visible = useMemo(() => {
     let result = discussions
@@ -58,133 +75,131 @@ export function ForumBrowser({
         .sort((a, b) => order.get(a.number)! - order.get(b.number)!)
     }
 
-    if (category !== 'all') result = result.filter((d) => d.category === category)
-    if (kind === 'topics') result = result.filter((d) => d.listingSlug === null)
-    if (kind === 'listings') result = result.filter((d) => d.listingSlug !== null)
+    if (filter !== 'all') result = result.filter((d) => categoryOf(d) === filter)
 
     return result
-  }, [discussions, deferredQuery, index, category, kind])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- categoryOf is derived from props above
+  }, [discussions, deferredQuery, index, filter, categoryBySlug])
 
   return (
     <div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
+      <div className="flex flex-wrap items-center gap-2 border-b-2 border-border-strong pb-4">
+        <h1 className="mr-auto text-[16px]">Forum</h1>
+        <div className="relative">
           <Search
-            size={16}
+            size={14}
             aria-hidden
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-subtle"
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-text-subtle"
           />
           <input
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search every discussion and comment…"
+            placeholder="search all discussion"
             aria-label="Search discussions"
-            className="w-full rounded-lg border border-border bg-surface py-2.5 pl-9 pr-3 text-sm placeholder:text-text-subtle focus:border-accent focus:outline-none"
+            className="input w-[220px] pl-8 text-[13px]"
           />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <select
-            value={kind}
-            onChange={(event) => setKind(event.target.value as Filter)}
-            aria-label="Thread type"
-            className="rounded-lg border border-border bg-surface px-3 py-2.5 text-sm focus:border-accent focus:outline-none"
-          >
-            <option value="all">Everything</option>
-            <option value="topics">Forum topics</option>
-            <option value="listings">Script comments</option>
-          </select>
-
-          {categories.length > 1 && (
-            <select
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-              aria-label="Category"
-              className="rounded-lg border border-border bg-surface px-3 py-2.5 text-sm focus:border-accent focus:outline-none"
-            >
-              <option value="all">All categories</option>
-              {categories.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          )}
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-text-muted">
-        {visible.length} {visible.length === 1 ? 'thread' : 'threads'}
-      </p>
+      {chips.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 border-b border-border py-3">
+          {chips.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setFilter(value)}
+              aria-pressed={filter === value}
+              className={
+                filter === value
+                  ? 'tag tag-outline cursor-pointer'
+                  : 'tag tag-quiet cursor-pointer hover:border-border-strong'
+              }
+            >
+              {value === 'all' ? 'All' : value}
+            </button>
+          ))}
+        </div>
+      )}
 
       {visible.length === 0 ? (
-        <div className="mt-5 rounded-card border border-dashed border-border bg-surface-2 px-6 py-14 text-center">
-          <MessageSquare size={22} aria-hidden className="mx-auto text-text-subtle" />
-          <p className="mt-3 font-medium">No threads match</p>
-          <p className="mt-1 text-sm text-text-muted">
-            Try a different search, or start the conversation yourself.
+        <div className="border border-border bg-surface px-6 py-14 text-center">
+          <p className="font-heading text-[15px]">No threads yet</p>
+          <p className="mt-1.5 text-[12px] text-text-muted">
+            {deferredQuery.trim()
+              ? 'Nothing matches that search.'
+              : 'Ask the first question, or leave a comment on any script.'}
           </p>
         </div>
       ) : (
-        <ul className="mt-5 divide-y divide-border overflow-hidden rounded-card border border-border bg-surface">
+        <ul>
           {visible.map((discussion) => (
-            <li key={discussion.number}>
-              <ThreadRow discussion={discussion} />
+            <li key={discussion.number} className="border-b border-border">
+              <ThreadRow
+                discussion={discussion}
+                category={categoryOf(discussion)}
+                scriptName={
+                  discussion.listingSlug
+                    ? (scriptNameBySlug[discussion.listingSlug] ?? discussion.title)
+                    : null
+                }
+              />
             </li>
           ))}
         </ul>
       )}
+
+      <p className="mt-5 text-[10.5px] leading-relaxed text-text-muted">
+        Threads tied to a script carry its name as a tag, so a question asked on a script card is
+        findable here.
+      </p>
     </div>
   )
 }
 
-function ThreadRow({ discussion }: { discussion: Discussion }) {
-  // A listing's comment thread is more useful opened on the listing page,
-  // where the reader can see what is being discussed.
-  const href = discussion.listingSlug
-    ? `/scripts/${discussion.listingSlug}`
-    : discussion.url
+function ThreadRow({
+  discussion,
+  category,
+  scriptName,
+}: {
+  discussion: Discussion
+  category: string
+  scriptName: string | null
+}) {
+  // A listing's comment thread is more useful opened on the listing page, where
+  // the reader can see what is being discussed.
+  const href = discussion.listingSlug ? `/scripts/${discussion.listingSlug}` : discussion.url
   const external = discussion.listingSlug === null
 
   const content = (
-    <div className="flex gap-3.5 px-4 py-4 transition-colors hover:bg-surface-2">
+    <div className="flex items-start gap-3 px-6 py-4 transition-colors hover:bg-surface-2">
+      {discussion.authorAvatar ? (
+        // eslint-disable-next-line @next/next/no-img-element -- remote avatar, already small
+        <img
+          src={discussion.authorAvatar}
+          alt=""
+          width={28}
+          height={28}
+          className="mt-0.5 h-7 w-7 shrink-0 rounded-full border border-border"
+        />
+      ) : (
+        <span className="mt-0.5 h-7 w-7 shrink-0 rounded-full bg-surface-3" aria-hidden />
+      )}
+
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          {discussion.listingSlug ? (
-            <Badge tone="accent">Script</Badge>
-          ) : (
-            <Badge tone="outline">
-              {discussion.categoryEmoji} {discussion.category}
-            </Badge>
-          )}
-          {discussion.answered && (
-            <span className="flex items-center gap-1 text-xs text-accent">
-              <CheckCircle2 size={12} aria-hidden />
-              Answered
-            </span>
-          )}
-        </div>
-
-        <p className="mt-1.5 font-medium leading-snug">{discussion.title}</p>
-
-        {discussion.excerpt && (
-          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-text-muted">
-            {discussion.excerpt}
-          </p>
-        )}
-
-        <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-subtle">
-          {discussion.author && <span>@{discussion.author}</span>}
-          <span>updated {formatRelative(discussion.updatedAt)}</span>
-          <span className="flex items-center gap-1">
-            <MessageSquare size={11} aria-hidden />
-            {discussion.comments}
-          </span>
+        <p className="text-[13px] leading-snug">{scriptName ?? discussion.title}</p>
+        <p className="mt-0.5 text-[10.5px] text-text-muted">
+          {category} · {scriptName ? `on ${scriptName}` : 'topic'}
+          {discussion.author ? ` · ${discussion.author}` : ''}
         </p>
       </div>
 
-      {external && <ArrowUpRight size={15} aria-hidden className="mt-1 shrink-0 text-text-subtle" />}
+      <div className="shrink-0 text-right text-[10.5px] text-text-muted">
+        <p>
+          {discussion.comments} {discussion.comments === 1 ? 'reply' : 'replies'}
+        </p>
+        <p>{formatRelative(discussion.updatedAt)}</p>
+      </div>
     </div>
   )
 

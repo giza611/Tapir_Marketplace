@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { MessageSquarePlus } from 'lucide-react'
 
 import { ForumBrowser } from '@/components/ForumBrowser'
 import { getDiscussions } from '@/lib/discussions'
+import { getAllListings } from '@/lib/listings'
+import { CATEGORY_LABELS } from '@/lib/schema'
 import { REPO_URL, newDiscussionUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -12,59 +13,62 @@ export const metadata: Metadata = {
 }
 
 export default async function ForumPage() {
-  const { available, discussions, categories } = await getDiscussions()
+  const { available, discussions } = await getDiscussions()
+
+  // A script-bound thread should show the listing's own category, not the
+  // GitHub Discussions category it technically lives in.
+  const listings = getAllListings()
+  const categoryBySlug = Object.fromEntries(
+    listings.map((listing) => [listing.slug, CATEGORY_LABELS[listing.category]]),
+  )
+  const scriptNameBySlug = Object.fromEntries(
+    listings.map((listing) => [listing.slug, listing.name]),
+  )
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Forum</h1>
-          <p className="mt-2 max-w-xl text-text-muted">
-            Questions, techniques and announcements — plus every comment left on every script,
-            because they are all the same GitHub Discussions thread underneath.
-          </p>
-        </div>
+    <div className="mx-auto max-w-[900px] px-6 py-6">
+      <div className="mb-4 flex justify-end">
         <a
           href={newDiscussionUrl()}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+          className="btn btn-primary btn-centered"
         >
-          <MessageSquarePlus size={15} aria-hidden />
-          Start a topic
+          New topic
         </a>
-      </header>
-
-      <div className="mt-8">
-        {available ? (
-          <ForumBrowser discussions={discussions} categories={categories} />
-        ) : (
-          <NotConfigured />
-        )}
       </div>
+
+      {available ? (
+        <ForumBrowser
+          discussions={discussions}
+          categoryBySlug={categoryBySlug}
+          scriptNameBySlug={scriptNameBySlug}
+        />
+      ) : (
+        <NotConfigured />
+      )}
     </div>
   )
 }
 
 /**
- * Reached when Discussions is off, or when the build had no GITHUB_TOKEN.
- * The forum still works on GitHub itself, so send people there rather than
- * showing a dead end.
+ * Reached before the daily job has produced a forum index. The conversation
+ * itself is live on GitHub regardless, so send people there rather than showing
+ * a dead end.
  */
 function NotConfigured() {
   return (
-    <div className="rounded-card border border-dashed border-border bg-surface-2 px-6 py-14 text-center">
-      <h2 className="font-medium">The forum index is not built yet</h2>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-text-muted">
-        This page mirrors GitHub Discussions at build time. It fills in once Discussions is enabled
-        on the repository and the build has a <code className="text-xs">GITHUB_TOKEN</code> to read
-        them with. In the meantime the conversation itself is live on GitHub.
+    <div className="border border-border bg-surface px-6 py-14 text-center">
+      <h1 className="text-[20px]">The forum index is not built yet</h1>
+      <p className="mx-auto mt-2 max-w-md text-[12px] leading-relaxed text-text-muted">
+        This page mirrors GitHub Discussions, refreshed daily by a scheduled job. It fills in once
+        Discussions is enabled on the repository and that job has run once.
       </p>
       <a
         href={`${REPO_URL}/discussions`}
         target="_blank"
         rel="noreferrer"
-        className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium transition-colors hover:border-border-strong"
+        className="btn btn-secondary btn-centered mt-5"
       >
         Open Discussions on GitHub
       </a>

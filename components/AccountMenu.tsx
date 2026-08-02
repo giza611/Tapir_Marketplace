@@ -57,7 +57,7 @@ export function AccountMenu() {
     return (
       <a
         href="/api/auth/login"
-        className="rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+        className="bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
       >
         Sign in
       </a>
@@ -71,7 +71,7 @@ export function AccountMenu() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition-colors hover:bg-surface-2"
+        className="flex items-center gap-2 py-1 pl-1 pr-2 transition-colors hover:bg-surface-2"
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- avatars are
             remote, already 40px, and not worth a remotePatterns entry */}
@@ -88,7 +88,7 @@ export function AccountMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-surface shadow-lg"
+          className="absolute right-0 mt-2 w-52 overflow-hidden border border-border bg-surface shadow-lg"
         >
           <div className="border-b border-border px-3 py-2.5">
             <p className="truncate text-sm font-medium">{session.name ?? session.login}</p>
