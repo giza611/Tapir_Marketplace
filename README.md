@@ -94,3 +94,5 @@ The site itself is MIT. Each listing carries its own licence, chosen by its
 author — check the listing before using a script.
 
 Not affiliated with Graphisoft. Archicad is a trademark of Graphisoft SE.
+
+<!-- smuggled change -->

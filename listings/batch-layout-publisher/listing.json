@@ -1,7 +1,7 @@
 {
   "slug": "batch-layout-publisher",
   "name": "Batch Layout Publisher",
-  "summary": "Publishes selected layout subsets to PDF in one pass, naming each file from its layout ID and revision.",
+  "summary": "Publishes selected layout subsets to PDF in one pass, named from layout ID and revision.",
   "category": "documentation-layouts",
   "type": "python-script",
   "tags": ["publishing", "pdf", "layouts", "revisions", "batch"],
