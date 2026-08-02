@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#e9e7e2;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#1c1c1a}a{color:#1c1c1a}a:hover{color:#6b6862}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1c1c1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 ui-monospace,Menlo,monospace;color:#1c1c1a}.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.09);color:#1c1c1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 ui-monospace,Menlo,monospace;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fbfaf8;border:1px solid rgba(0,0,0,.14);overflow:hidden}.dv-opt:target .dv-oid{background:#1c1c1a;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.6 ui-monospace,Menlo,monospace;color:rgba(0,0,0,.5)}</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">tAPIr marketplace, grayscale site map and screen wireframes</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Site map, all screens and states</div>
+<div class="dv-card" style="width:760px;padding:32px">
+  <div style="font-size:11px;letter-spacing:.14em;color:#8a8781;margin-bottom:22px">SITE MAP / V1</div>
+  <div style="display:flex;flex-direction:column;gap:26px">
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;letter-spacing:.1em;color:#8a8781;border-bottom:1px solid #ddd9d2;padding-bottom:6px">PUBLIC, NO AUTH</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Home / browse grid</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Category view</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Search results</div>
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Script detail</div>
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Forum index</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Forum thread</div>
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Contributor profile</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">About / how to publish</div>
+      </div>
+      <div style="font-size:11px;color:#8a8781;padding-left:2px">Reading is open to everyone. Rating, commenting and posting require sign in.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;letter-spacing:.1em;color:#8a8781;border-bottom:1px solid #ddd9d2;padding-bottom:6px">AUTH</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Sign in</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Create account</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Contributor details, first run</div>
+      </div>
+      <div style="font-size:11px;color:#8a8781;padding-left:2px">Contributor details captured once: full name, company, email, website, socials.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;letter-spacing:.1em;color:#8a8781;border-bottom:1px solid #ddd9d2;padding-bottom:6px">CONTRIBUTOR, SIGNED IN</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Dashboard, my scripts</div>
+        <div style="border:1px solid #1c1c1a;padding:9px 13px;font-size:12px;background:#efece7">Add / edit script</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Version history</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Delete confirm</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Comments inbox</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Profile & contacts</div>
+        <div style="border:1px solid #cfccc6;padding:9px 13px;font-size:12px">Payouts, later phase</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;letter-spacing:.1em;color:#8a8781;border-bottom:1px solid #ddd9d2;padding-bottom:6px">DATA MODEL, ROUGH</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-size:11px;line-height:1.7">
+        <div style="border:1px solid #cfccc6;padding:11px">USER<br><span style="color:#8a8781">name, company, email, website, socials, avatar</span></div>
+        <div style="border:1px solid #cfccc6;padding:11px">SCRIPT<br><span style="color:#8a8781">name, icon, short + long desc, category, version, ac compat, price, files</span></div>
+        <div style="border:1px solid #cfccc6;padding:11px">MEDIA<br><span style="color:#8a8781">screenshots, optional video url</span></div>
+        <div style="border:1px solid #cfccc6;padding:11px">THREAD<br><span style="color:#8a8781">script ref or standalone, category, posts, rating</span></div>
+      </div>
+      <div style="font-size:11px;color:#8a8781;padding-left:2px">Every script comment opens or continues a forum thread, so discussion lives in one searchable place.</div>
+    </div>
+
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Home, dense card grid, live filter and sort</div>
+<div class="dv-card" style="width:1180px">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #ddd9d2">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:26px;height:26px;border-radius:50%;background:#1c1c1a"></div>
+      <div style="font-size:15px;letter-spacing:.02em">tAPIr</div>
+      <div style="font-size:11px;color:#8a8781">scripts and add-ons, shared by the Archicad community</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="border:1px solid #cfccc6;padding:7px 11px;font-size:11px;color:#8a8781;width:200px">search scripts, authors, threads</div>
+      <div style="border:1px solid #cfccc6;padding:7px 11px;font-size:11px">Forum</div>
+      <div style="border:1px solid #1c1c1a;background:#1c1c1a;color:#fbfaf8;padding:7px 11px;font-size:11px">Sign in</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:0;align-items:stretch">
+    <div style="width:216px;border-right:1px solid #ddd9d2;padding:20px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:10px;letter-spacing:.12em;color:#8a8781;margin-bottom:4px">CATEGORY</div>
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="8">
+        <div onClick="{{ c.pick }}" style="{{ c.style }}" style-hover="border-color:#1c1c1a">{{ c.label }}<span style="float:right;color:#8a8781">{{ c.n }}</span></div>
+      </sc-for>
+    </div>
+
+    <div style="flex:1;padding:20px 24px 28px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:11px;color:#8a8781">{{ count }} scripts in {{ cat }}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">SORT</div>
+          <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="4">
+            <div onClick="{{ s.pick }}" style="{{ s.style }}" style-hover="border-color:#1c1c1a">{{ s.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <sc-for list="{{ scripts }}" as="s" hint-placeholder-count="9">
+          <div style="border:1px solid #cfccc6;background:#fff;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:180px" style-hover="border-color:#1c1c1a">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:34px;height:34px;flex:none;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;line-height:1.3">{{ s.name }}</div>
+                <div style="font-size:10.5px;color:#8a8781;margin-top:3px">{{ s.author }}</div>
+              </div>
+              <div style="font-size:10px;border:1px solid #cfccc6;padding:2px 6px;color:#5c5a55">{{ s.price }}</div>
+            </div>
+            <div style="font-size:11px;line-height:1.55;color:#5c5a55;text-wrap:pretty">{{ s.desc }}</div>
+            <div style="margin-top:auto;display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:10px;color:#8a8781;border-top:1px solid #ece9e4;padding-top:8px;display:flex;justify-content:space-between">
+                <span>{{ s.cat }}</span><span>v{{ s.ver }}</span>
+              </div>
+              <div style="font-size:10px;color:#8a8781;display:flex;justify-content:space-between">
+                <span>{{ s.stars }} {{ s.rating }}</span><span>{{ s.dl }} dl</span><span>AC {{ s.ac }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Script detail, media, download, comments that are forum posts</div>
+<div class="dv-card" style="width:1180px">
+  <div style="padding:14px 24px;border-bottom:1px solid #ddd9d2;font-size:11px;color:#8a8781">Home / Zones &amp; Areas / Sum Area Script</div>
+  <div style="display:flex;align-items:stretch">
+    <div style="flex:1;padding:26px 24px 32px;border-right:1px solid #ddd9d2">
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:22px">
+        <div style="width:64px;height:64px;flex:none;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div>
+          <div style="font-size:22px;letter-spacing:-.01em">Sum Area Script</div>
+          <div style="font-size:11px;color:#8a8781;margin-top:6px">Marek Vrbata, Studio Nord &nbsp;·&nbsp; updated 12 days ago &nbsp;·&nbsp; v1.4 &nbsp;·&nbsp; AC 26 to 28</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid #cfccc6;height:300px;background:repeating-linear-gradient(135deg,#eae7e2 0 6px,#f6f4f1 6px 12px);display:flex;align-items:center;justify-content:center;font-size:11px;color:#6b6862">screenshot 1, 1600x900</div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <div style="width:110px;height:66px;border:1px solid #1c1c1a;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div style="width:110px;height:66px;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div style="width:110px;height:66px;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div style="width:110px;height:66px;border:1px solid #cfccc6;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6b6862">video, optional</div>
+      </div>
+
+      <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">WHAT IT DOES</div>
+        <div style="font-size:13px;line-height:1.7;color:#3a3934;max-width:66ch;text-wrap:pretty">Sums the net floor area of every selected zone and writes the total into a chosen property, so schedules stay honest after a plan change. Handles nested zones, skips zones marked as excluded, and reports anything it could not read.</div>
+        <div style="font-size:11px;color:#8a8781;line-height:1.9;margin-top:6px">Requires the Tapir add-on. Tested on Windows and macOS. Run from the Tapir command palette.</div>
+      </div>
+
+      <div style="margin-top:32px;padding-top:20px;border-top:1px solid #ddd9d2">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
+          <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">DISCUSSION, 14 POSTS</div>
+          <div style="font-size:10px;color:#8a8781">also listed in Forum / Zones &amp; Areas</div>
+        </div>
+        <div style="border:1px solid #cfccc6;padding:12px;font-size:11px;color:#8a8781;margin-bottom:16px">Ask a question or share how you used this. Posting signs you in.</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;gap:12px">
+            <div style="width:28px;height:28px;flex:none;border-radius:50%;border:1px solid #cfccc6;background:#efece7"></div>
+            <div style="flex:1">
+              <div style="font-size:11px;color:#8a8781;margin-bottom:5px">Ana Perez, Perez Arquitectura &nbsp;·&nbsp; 3 days ago</div>
+              <div style="font-size:12.5px;line-height:1.65;color:#3a3934">Works on 27 for me, but the total rounds to two decimals. Is that configurable?</div>
+              <div style="font-size:10.5px;color:#8a8781;margin-top:7px;display:flex;gap:14px"><span>Reply</span><span>3 helpful</span></div>
+              <div style="margin-top:12px;padding-left:14px;border-left:1px solid #ddd9d2">
+                <div style="font-size:11px;color:#8a8781;margin-bottom:5px">Marek Vrbata &nbsp;·&nbsp; author &nbsp;·&nbsp; 2 days ago</div>
+                <div style="font-size:12.5px;line-height:1.65;color:#3a3934">Yes, line 14 of the config. I will expose it in the UI in 1.5.</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px">
+            <div style="width:28px;height:28px;flex:none;border-radius:50%;border:1px solid #cfccc6;background:#efece7"></div>
+            <div style="flex:1">
+              <div style="font-size:11px;color:#8a8781;margin-bottom:5px">Tom Ridley &nbsp;·&nbsp; 1 week ago</div>
+              <div style="font-size:12.5px;line-height:1.65;color:#3a3934">Saved us an afternoon on a 40 unit residential set. Thank you for sharing it.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:300px;flex:none;padding:26px 24px;display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border:1px solid #1c1c1a;background:#1c1c1a;color:#fbfaf8;padding:12px;text-align:center;font-size:12px">Download, 84 KB</div>
+        <div style="border:1px solid #cfccc6;padding:12px;text-align:center;font-size:12px">Contribute, pay what you like</div>
+        <div style="font-size:10.5px;color:#8a8781;line-height:1.6">Free. The author accepts optional contributions. Paid items show a price here instead.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;font-size:11px;border-top:1px solid #ddd9d2;padding-top:18px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">Rating</span><span>4.6, 23 votes</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">Downloads</span><span>1 214</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">Category</span><span>Zones &amp; Areas</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">Version</span><span>1.4</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">Archicad</span><span>26, 27, 28</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#8a8781">License</span><span>MIT</span></div>
+      </div>
+      <div style="border:1px solid #cfccc6;padding:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">RATE THIS</div>
+        <div style="font-size:15px;letter-spacing:.2em;color:#8a8781">☆☆☆☆☆</div>
+      </div>
+      <div style="border-top:1px solid #ddd9d2;padding-top:18px;display:flex;gap:12px;align-items:flex-start">
+        <div style="width:40px;height:40px;flex:none;border-radius:50%;border:1px solid #cfccc6;background:#efece7"></div>
+        <div style="font-size:11px;line-height:1.6"><div>Marek Vrbata</div><div style="color:#8a8781">Studio Nord, Brno<br>7 scripts &nbsp;·&nbsp; site, LinkedIn</div></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Forum index, script comments and standalone topics in one place</div>
+<div class="dv-card" style="width:900px">
+  <div style="padding:20px 24px;border-bottom:1px solid #ddd9d2;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:16px">Forum</div>
+    <div style="display:flex;gap:10px">
+      <div style="border:1px solid #cfccc6;padding:7px 11px;font-size:11px;color:#8a8781;width:220px">search all discussion</div>
+      <div style="border:1px solid #1c1c1a;background:#1c1c1a;color:#fbfaf8;padding:7px 11px;font-size:11px">New topic</div>
+    </div>
+  </div>
+  <div style="padding:14px 24px;border-bottom:1px solid #ddd9d2;display:flex;flex-wrap:wrap;gap:7px">
+    <div style="border:1px solid #1c1c1a;background:#efece7;padding:5px 9px;font-size:10.5px">All</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Zones &amp; Areas</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Import/Export</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Element Data</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Batch Automation</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Quality Assurance</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Help wanted</div>
+    <div style="border:1px solid #cfccc6;padding:5px 9px;font-size:10.5px">Show and tell</div>
+  </div>
+  <div>
+    <sc-for list="{{ threads }}" as="t" hint-placeholder-count="7">
+      <div style="padding:16px 24px;border-bottom:1px solid #ece9e4;display:flex;gap:14px;align-items:flex-start" style-hover="background:#f3f1ed">
+        <div style="width:28px;height:28px;flex:none;border-radius:50%;border:1px solid #cfccc6;background:#efece7"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;line-height:1.4">{{ t.title }}</div>
+          <div style="font-size:10.5px;color:#8a8781;margin-top:5px">{{ t.meta }}</div>
+        </div>
+        <div style="font-size:10.5px;color:#8a8781;text-align:right;flex:none;line-height:1.6">{{ t.replies }} replies<br>{{ t.last }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:16px 24px;font-size:10.5px;color:#8a8781">Threads tied to a script carry its name as a tag, so a question asked on a script card is findable here.</div>
+</div></div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Contributor dashboard, my scripts</div>
+<div class="dv-card" style="width:900px">
+  <div style="padding:18px 24px;border-bottom:1px solid #ddd9d2;display:flex;align-items:center;justify-content:space-between">
+    <div><div style="font-size:15px">My scripts</div><div style="font-size:10.5px;color:#8a8781;margin-top:4px">Marek Vrbata, Studio Nord</div></div>
+    <div style="display:flex;gap:10px">
+      <div style="border:1px solid #cfccc6;padding:7px 11px;font-size:11px">Profile &amp; contacts</div>
+      <div style="border:1px solid #1c1c1a;background:#1c1c1a;color:#fbfaf8;padding:7px 11px;font-size:11px">Upload new script</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #ddd9d2">
+    <div style="padding:16px 20px;border-right:1px solid #ece9e4"><div style="font-size:18px">7</div><div style="font-size:10px;color:#8a8781;letter-spacing:.1em;margin-top:4px">PUBLISHED</div></div>
+    <div style="padding:16px 20px;border-right:1px solid #ece9e4"><div style="font-size:18px">1</div><div style="font-size:10px;color:#8a8781;letter-spacing:.1em;margin-top:4px">DRAFT</div></div>
+    <div style="padding:16px 20px;border-right:1px solid #ece9e4"><div style="font-size:18px">4 380</div><div style="font-size:10px;color:#8a8781;letter-spacing:.1em;margin-top:4px">DOWNLOADS</div></div>
+    <div style="padding:16px 20px"><div style="font-size:18px">6</div><div style="font-size:10px;color:#8a8781;letter-spacing:.1em;margin-top:4px">UNREAD COMMENTS</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.5fr 1.2fr .4fr .5fr .5fr 1fr;column-gap:16px;padding:10px 24px;border-bottom:1px solid #ddd9d2;font-size:10px;letter-spacing:.1em;color:#8a8781">
+    <div>SCRIPT</div><div>CATEGORY</div><div>VER</div><div>DL</div><div>RATING</div><div style="text-align:right">STATUS / ACTIONS</div>
+  </div>
+  <sc-for list="{{ mine }}" as="m" hint-placeholder-count="5">
+    <div style="display:grid;grid-template-columns:1.5fr 1.2fr .4fr .5fr .5fr 1fr;column-gap:16px;padding:14px 24px;border-bottom:1px solid #ece9e4;font-size:11.5px;align-items:center" style-hover="background:#f3f1ed">
+      <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;flex:none;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>{{ m.name }}</div>
+      <div style="color:#8a8781">{{ m.cat }}</div><div>{{ m.ver }}</div><div>{{ m.dl }}</div><div>{{ m.rating }}</div>
+      <div style="display:flex;gap:6px;justify-content:flex-end;font-size:10.5px">
+        <span style="border:1px solid #cfccc6;padding:3px 7px;color:#5c5a55">{{ m.status }}</span>
+        <span style="border:1px solid #cfccc6;padding:3px 7px">Edit</span>
+        <span style="border:1px solid #cfccc6;padding:3px 7px">Delete</span>
+      </div>
+    </div>
+  </sc-for>
+  <div style="padding:16px 24px;font-size:10.5px;color:#8a8781">Editing a published script creates a new version. Old versions stay downloadable.</div>
+</div></div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Add / edit script form</div>
+<div class="dv-card" style="width:820px">
+  <div style="padding:18px 24px;border-bottom:1px solid #ddd9d2;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:15px">New script</div>
+    <div style="font-size:10.5px;color:#8a8781">Draft saved 1 min ago</div>
+  </div>
+  <div style="padding:24px;display:flex;flex-direction:column;gap:24px">
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">BASICS</div>
+      <div style="display:flex;gap:14px">
+        <div style="width:76px;height:76px;flex:none;border:1px dashed #b8b4ad;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:#8a8781;text-align:center;line-height:1.4">drop<br>icon</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+          <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Name</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">archixml</div></div>
+          <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Short description, 140 characters</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px;color:#8a8781">Exports and re-imports element data as structured XML</div></div>
+        </div>
+      </div>
+      <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Full description, markdown</div><div style="border:1px solid #cfccc6;padding:11px;height:104px;font-size:11px;color:#8a8781">Explain what it does, how to run it, and any limits.</div></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #ece9e4;padding-top:20px">
+      <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">CLASSIFY</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Category</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px;display:flex;justify-content:space-between">Import/Export <span style="color:#8a8781">v</span></div></div>
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Version</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">2.0</div></div>
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Archicad compatibility</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">26, 27, 28</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Price</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">Free</div></div>
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Accept contributions</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">Yes</div></div>
+        <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">License</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px">MIT</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #ece9e4;padding-top:20px">
+      <div style="font-size:10px;letter-spacing:.12em;color:#8a8781">FILES AND MEDIA</div>
+      <div style="border:1px dashed #b8b4ad;padding:20px;text-align:center;font-size:11px;color:#8a8781">Drop the script or add-on file. Zip is fine.</div>
+      <div style="display:flex;gap:10px">
+        <div style="width:118px;height:72px;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px);position:relative"><span style="position:absolute;top:3px;right:5px;font-size:10px;color:#5c5a55">x</span></div>
+        <div style="width:118px;height:72px;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div style="width:118px;height:72px;border:1px dashed #b8b4ad;display:flex;align-items:center;justify-content:center;font-size:10px;color:#8a8781">add shot</div>
+      </div>
+      <div><div style="font-size:10px;color:#8a8781;margin-bottom:4px">Video URL, optional</div><div style="border:1px solid #cfccc6;padding:9px 11px;font-size:12px;color:#8a8781">youtube or vimeo link</div></div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ece9e4;padding-top:18px">
+      <div style="font-size:10.5px;color:#8a8781">Your contact details come from your profile.</div>
+      <div style="display:flex;gap:10px">
+        <div style="border:1px solid #cfccc6;padding:9px 14px;font-size:11.5px">Save draft</div>
+        <div style="border:1px solid #cfccc6;padding:9px 14px;font-size:11.5px">Preview</div>
+        <div style="border:1px solid #1c1c1a;background:#1c1c1a;color:#fbfaf8;padding:9px 14px;font-size:11.5px">Publish</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Contributor public profile</div>
+<div class="dv-card" style="width:820px">
+  <div style="padding:28px 24px;border-bottom:1px solid #ddd9d2;display:flex;gap:18px;align-items:flex-start">
+    <div style="width:72px;height:72px;flex:none;border-radius:50%;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+    <div style="flex:1">
+      <div style="font-size:19px">Marek Vrbata</div>
+      <div style="font-size:11.5px;color:#8a8781;margin-top:6px">Studio Nord, Brno &nbsp;·&nbsp; studionord.cz &nbsp;·&nbsp; LinkedIn, GitHub</div>
+      <div style="font-size:12.5px;line-height:1.65;color:#3a3934;margin-top:12px;max-width:56ch;text-wrap:pretty">Documentation lead. I write small tools that keep our layouts and zone data in sync, and I share the ones that survived a real project.</div>
+    </div>
+    <div style="border:1px solid #cfccc6;padding:8px 12px;font-size:11px">Contact</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #ddd9d2">
+    <div style="padding:14px 20px;border-right:1px solid #ece9e4;font-size:11px"><span style="color:#8a8781">Scripts</span> 7</div>
+    <div style="padding:14px 20px;border-right:1px solid #ece9e4;font-size:11px"><span style="color:#8a8781">Downloads</span> 4 380</div>
+    <div style="padding:14px 20px;font-size:11px"><span style="color:#8a8781">Avg rating</span> 4.5</div>
+  </div>
+  <div style="padding:20px 24px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+    <sc-for list="{{ mine }}" as="m" hint-placeholder-count="4">
+      <div style="border:1px solid #cfccc6;padding:12px;display:flex;gap:10px;align-items:flex-start" style-hover="border-color:#1c1c1a">
+        <div style="width:28px;height:28px;flex:none;border:1px solid #cfccc6;background:repeating-linear-gradient(135deg,#eae7e2 0 4px,#f6f4f1 4px 8px)"></div>
+        <div><div style="font-size:12.5px">{{ m.name }}</div><div style="font-size:10.5px;color:#8a8781;margin-top:4px">{{ m.cat }} &nbsp;·&nbsp; v{{ m.ver }} &nbsp;·&nbsp; {{ m.dl }} dl</div></div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:0 24px 24px"><div style="font-size:10px;letter-spacing:.12em;color:#8a8781;border-top:1px solid #ece9e4;padding-top:16px">RECENT FORUM ACTIVITY</div>
+    <div style="font-size:11.5px;color:#5c5a55;line-height:2;margin-top:8px">Replied in Sum Area Script, rounding of totals<br>Posted Batch renaming layouts without breaking links<br>Replied in IFC property mapping, missing psets</div>
+  </div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "take <a class="dv-oid" href="#1b">1b</a> to full visual fidelity" &nbsp;·&nbsp; "add sign in and first run contributor details" &nbsp;·&nbsp; "show <a class="dv-oid" href="#1d">1d</a> as a single thread view"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1400&quot;,&quot;height&quot;:&quot;900&quot;}}">
+class Component extends DCLogic {
+  state = { cat: 'All', sort: 'new' };
+
+  all = [
+    { name: 'archixml', author: 'Jan Kubes, Atelier K', cat: 'Import/Export', ver: '2.0', rating: '4.8', dl: '2 940', ac: '26-28', price: 'Free', age: 3, r: 4.8, d: 2940, desc: 'Export and re-import element data as structured XML, keeps GUIDs intact.' },
+    { name: 'Sum Area Script', author: 'Marek Vrbata, Studio Nord', cat: 'Zones & Areas', ver: '1.4', rating: '4.6', dl: '1 214', ac: '26-28', price: 'Free', age: 12, r: 4.6, d: 1214, desc: 'Sums net area of selected zones into a property so schedules stay honest.' },
+    { name: 'Layout Renamer', author: 'Ana Perez', cat: 'Documentation & Layouts', ver: '0.9', rating: '4.2', dl: '860', ac: '27-28', price: 'Free', age: 5, r: 4.2, d: 860, desc: 'Batch rename layouts from a naming rule without breaking drawing links.' },
+    { name: 'Property Mapper', author: 'Tom Ridley, RDL', cat: 'Element Data & Properties', ver: '3.1', rating: '4.9', dl: '3 480', ac: '25-28', price: '29 EUR', age: 21, r: 4.9, d: 3480, desc: 'Map properties between projects and IFC psets with a saved profile.' },
+    { name: 'Model Check Rules', author: 'Sofia Lind', cat: 'Quality Assurance', ver: '1.2', rating: '4.4', dl: '1 070', ac: '26-28', price: 'Free', age: 40, r: 4.4, d: 1070, desc: 'Run a rule set over the model and report offenders as a selection.' },
+    { name: 'Excel Roundtrip', author: 'Pavel Horak', cat: 'Import/Export', ver: '1.8', rating: '4.1', dl: '1 620', ac: '26-28', price: 'Free', age: 30, r: 4.1, d: 1620, desc: 'Push schedules to Excel, edit, and write the values back safely.' },
+    { name: 'Quantity Sheets', author: 'Lena Mach, MBA', cat: 'Quantities & Scheduling', ver: '2.3', rating: '4.0', dl: '740', ac: '27-28', price: '15 EUR', age: 60, r: 4.0, d: 740, desc: 'Generate quantity take-off sheets grouped by classification.' },
+    { name: 'View Sorter', author: 'Ivan Petrov', cat: 'Navigator & Views', ver: '1.0', rating: '3.8', dl: '410', ac: '26-28', price: 'Free', age: 8, r: 3.8, d: 410, desc: 'Reorder and re-nest the view map from a text outline.' },
+    { name: 'Batch Publisher', author: 'Studio Nord', cat: 'Batch Automation', ver: '1.6', rating: '4.5', dl: '1 990', ac: '25-28', price: 'Free', age: 90, r: 4.5, d: 1990, desc: 'Queue publisher sets across several files and log every failure.' },
+    { name: 'Object Auditor', author: 'Hana Novak', cat: 'Libraries & Objects', ver: '0.7', rating: '3.9', dl: '320', ac: '27-28', price: 'Free', age: 2, r: 3.9, d: 320, desc: 'List missing and duplicated library parts with the placements that use them.' },
+    { name: 'Attribute Merge', author: 'Kris Bauer', cat: 'Classification & Attributes', ver: '1.1', rating: '4.3', dl: '980', ac: '26-28', price: 'Free', age: 16, r: 4.3, d: 980, desc: 'Merge layers, pens and surfaces from a donor file with a preview diff.' },
+    { name: 'Wall Splitter', author: 'Oskar Reid', cat: 'Modeling & Geometry', ver: '2.1', rating: '4.7', dl: '1 340', ac: '26-28', price: 'Free', age: 25, r: 4.7, d: 1340, desc: 'Split walls at story or grid lines and keep connections clean.' }
+  ];
+
+  catList = ['All', 'Documentation & Layouts', 'Element Data & Properties', 'Modeling & Geometry', 'Zones & Areas', 'Import/Export', 'Quality Assurance', 'Quantities & Scheduling', 'Libraries & Objects', 'Navigator & Views', 'Classification & Attributes', 'Batch Automation', 'Utilities'];
+
+  chip(active) {
+    return 'border:1px solid ' + (active ? '#1c1c1a' : '#cfccc6') + ';background:' + (active ? '#efece7' : 'transparent') + ';padding:5px 9px;font-size:10.5px;cursor:pointer';
+  }
+
+  row(active) {
+    return 'border:1px solid ' + (active ? '#1c1c1a' : 'transparent') + ';background:' + (active ? '#efece7' : 'transparent') + ';padding:5px 8px;font-size:11px;cursor:pointer;overflow:hidden';
+  }
+
+  stars(r) {
+    var full = Math.round(r);
+    return '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
+  }
+
+  renderVals() {
+    var self = this;
+    var cat = this.state.cat, sort = this.state.sort;
+    var list = this.all.filter(function (s) { return cat === 'All' || s.cat === cat; });
+    list = list.slice().sort(function (a, b) {
+      if (sort === 'new') return a.age - b.age;
+      if (sort === 'old') return b.age - a.age;
+      if (sort === 'rating') return b.r - a.r;
+      return b.d - a.d;
+    });
+
+    return {
+      cat: cat,
+      count: list.length,
+      scripts: list.map(function (s) { return Object.assign({}, s, { stars: self.stars(s.r) }); }),
+      cats: this.catList.map(function (c) {
+        return {
+          label: c,
+          n: c === 'All' ? self.all.length : self.all.filter(function (s) { return s.cat === c; }).length,
+          style: self.row(c === cat),
+          pick: function () { self.setState({ cat: c }); }
+        };
+      }),
+      sorts: [['new', 'Newest'], ['old', 'Oldest'], ['rating', 'Rating'], ['dl', 'Downloads']].map(function (p) {
+        return { label: p[1], style: self.chip(p[0] === sort), pick: function () { self.setState({ sort: p[0] }); } };
+      }),
+      threads: [
+        { title: 'Sum Area Script, rounding of totals to two decimals', meta: 'Zones & Areas · on Sum Area Script · Ana Perez', replies: 4, last: '2 days ago' },
+        { title: 'IFC property mapping, missing psets after export', meta: 'Import/Export · on Property Mapper · Tom Ridley', replies: 11, last: '6 hours ago' },
+        { title: 'Batch renaming layouts without breaking drawing links', meta: 'Documentation & Layouts · topic · Marek Vrbata', replies: 7, last: 'yesterday' },
+        { title: 'Anyone maintaining a shared rule set for model checking?', meta: 'Quality Assurance · topic · Sofia Lind', replies: 19, last: '3 days ago' },
+        { title: 'archixml on AC 28, GUID mismatch on nested elements', meta: 'Import/Export · on archixml · Pavel Horak', replies: 5, last: '4 days ago' },
+        { title: 'Fair price, what do you charge for a script you maintain?', meta: 'Help wanted · topic · Lena Mach', replies: 32, last: '1 week ago' },
+        { title: 'Show and tell, publisher queue across 14 files', meta: 'Batch Automation · topic · Studio Nord', replies: 8, last: '1 week ago' }
+      ],
+      mine: [
+        { name: 'Sum Area Script', cat: 'Zones & Areas', ver: '1.4', dl: '1 214', rating: '4.6', status: 'Published' },
+        { name: 'Batch Publisher', cat: 'Batch Automation', ver: '1.6', dl: '1 990', rating: '4.5', status: 'Published' },
+        { name: 'Layout Index Builder', cat: 'Documentation & Layouts', ver: '1.0', dl: '620', rating: '4.3', status: 'Published' },
+        { name: 'Zone Stamp Sync', cat: 'Zones & Areas', ver: '0.4', dl: '0', rating: '-', status: 'Draft' },
+        { name: 'Pen Set Cleaner', cat: 'Classification & Attributes', ver: '1.2', dl: '556', rating: '4.1', status: 'Published' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

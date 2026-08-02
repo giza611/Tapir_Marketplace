@@ -21,6 +21,22 @@ export default function SubmitPage() {
         whoever runs this site — can quietly change or remove your work.
       </p>
 
+      <p className="mt-5 rounded-card border border-border bg-surface-2 px-5 py-4 text-sm leading-relaxed text-text-muted">
+        <strong className="text-text">You need a free GitHub account to publish.</strong>{' '}
+        Downloading and browsing need no account at all. Publishing does, because your listing is
+        committed to a public repository under your own name — that is what lets you edit or remove
+        it later without asking anyone&rsquo;s permission, and what stops anyone else editing it.{' '}
+        <a
+          href="https://github.com/signup"
+          target="_blank"
+          rel="noreferrer"
+          className="text-accent underline underline-offset-2"
+        >
+          Signing up
+        </a>{' '}
+        takes about a minute.
+      </p>
+
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/dashboard/new"
