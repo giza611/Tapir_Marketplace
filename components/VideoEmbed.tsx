@@ -21,7 +21,7 @@ export function VideoEmbed({ video, title }: { video: ParsedVideo; title: string
       <div className="aspect-video w-full border border-border bg-surface-2">
         <iframe
           src={video.embedUrl}
-          title={`${title} — video`}
+          title={`${title} video`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
           allowFullScreen
           referrerPolicy="strict-origin-when-cross-origin"

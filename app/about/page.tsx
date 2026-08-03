@@ -21,7 +21,7 @@ export default function AboutPage() {
         </h1>
         <p className="mt-5 max-w-[52ch] text-[15px] leading-relaxed text-text-muted">
           {SITE.fullName} exists so Archicad automation stops living in forum attachments and
-          private folders. It was built to be handed over — there is no company behind it, no
+          private folders. It was built to be handed over. There is no company behind it, no
           server to pay for, and no account anyone has to administer.
         </p>
 
@@ -55,7 +55,7 @@ export default function AboutPage() {
           <p>
             <strong className="text-text">Publishing needs a free GitHub account</strong>, because
             your listing is committed under your name. That is what lets you edit or remove it
-            later without asking anyone&rsquo;s permission — and what stops anyone else editing
+            later without asking anyone&rsquo;s permission, and what stops anyone else editing
             it.
           </p>
           <p>
@@ -97,7 +97,7 @@ export default function AboutPage() {
       </div>
 
       <PosterBand
-        statement="Everything here was shared by someone who did not have to."
+        statement="Share your work with the community."
         action="Publish a script"
         href="/submit"
       />

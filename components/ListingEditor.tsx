@@ -112,7 +112,7 @@ export function ListingEditor({ login, initial, today }: Props) {
         setErrors([
           `"${file.name}" is ${Math.round(file.size / 1024)} KB. Screenshots must be under ${Math.round(
             LIMITS.maxImageBytes / 1024,
-          )} KB — compress it and try again.`,
+          )} KB. Compress it and try again.`,
         ])
         continue
       }
@@ -214,7 +214,7 @@ export function ListingEditor({ login, initial, today }: Props) {
         <h2 className="mt-3 text-lg font-semibold">Submitted</h2>
         <p className="mt-2 max-w-lg leading-relaxed text-text-muted">
           Your listing was sent as pull request #{success.number}. Automated checks are running now
-          — if it passes, it merges on its own and appears on the site within a couple of minutes.
+          If it passes, it merges on its own and appears on the site within a couple of minutes.
           If something needs changing, a comment will explain what.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
@@ -282,7 +282,7 @@ export function ListingEditor({ login, initial, today }: Props) {
           />
         </Field>
 
-        <Field label="One-line summary" required hint={`${summary.length}/${LIMITS.summaryMaxLength} — shown on the card.`}>
+        <Field label="One-line summary" required hint={`${summary.length}/${LIMITS.summaryMaxLength}, shown on the card.`}>
           <input
             required
             value={summary}
@@ -332,7 +332,7 @@ export function ListingEditor({ login, initial, today }: Props) {
           />
         </Field>
 
-        <Field label="Licence" required hint="People are running your code — say what they may do with it.">
+        <Field label="Licence" required hint="People are running your code. Say what they may do with it.">
           <select
             value={license}
             onChange={(event) => setLicense(event.target.value)}
@@ -602,7 +602,7 @@ export function ListingEditor({ login, initial, today }: Props) {
           <Field
             label="Your payment link"
             required
-            hint="Ko-fi, GitHub Sponsors, PayPal, Gumroad, a Stripe payment link — anything you control."
+            hint="Ko-fi, GitHub Sponsors, PayPal, Gumroad, a Stripe payment link, or anything you control."
           >
             <input
               required

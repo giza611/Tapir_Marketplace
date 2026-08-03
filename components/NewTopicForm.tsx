@@ -114,7 +114,7 @@ export function NewTopicForm({ login }: { login: string }) {
           placeholder="Zone areas differ between the schedule and the script output"
         />
         <p className="mt-1 text-[11px] text-text-subtle">
-          {title.length}/{TITLE_MAX} — a specific title gets a specific answer.
+          {title.length}/{TITLE_MAX}. A specific title gets a specific answer.
         </p>
       </div>
 

@@ -17,14 +17,14 @@ export default function SubmitPage() {
       <h1 className="text-4xl font-semibold tracking-tight">Publish a script</h1>
       <p className="mt-4 text-lg leading-relaxed text-text-muted">
         Publishing is free and takes a few minutes. Your listing becomes a file in a public
-        repository under your own name, which means you keep control of it and nobody — including
-        whoever runs this site — can quietly change or remove your work.
+        repository under your own name, which means you keep control of it, and nobody, including
+        whoever runs this site, can quietly change or remove your work.
       </p>
 
       <p className="mt-5 border border-border bg-surface-2 px-5 py-4 text-sm leading-relaxed text-text-muted">
         <strong className="text-text">You need a free GitHub account to publish.</strong>{' '}
         Downloading and browsing need no account at all. Publishing does, because your listing is
-        committed to a public repository under your own name — that is what lets you edit or remove
+        committed to a public repository under your own name. That is what lets you edit or remove
         it later without asking anyone&rsquo;s permission, and what stops anyone else editing it.{' '}
         <a
           href="https://github.com/signup"
@@ -90,7 +90,7 @@ export default function SubmitPage() {
           <Rule>
             <strong className="text-text">Host the download wherever you like</strong>, as long as
             it is a public https link. Every file is hashed the first time it is seen and checked
-            again daily — if the bytes behind a published version change, the listing is flagged
+            again daily. If the bytes behind a published version change, the listing is flagged
             and the download is pulled until you publish a proper new version. A GitHub release
             asset is still the easiest option, and it is the only one that reports download counts.
           </Rule>
@@ -106,7 +106,7 @@ export default function SubmitPage() {
         <h2 className="text-lg font-semibold tracking-tight">Charging for your work</h2>
         <p className="mt-2.5 leading-relaxed text-text-muted">
           You can list a script as free, free with a contribution link, or paid. In every case the
-          money goes straight to you — add your own Ko-fi, GitHub Sponsors, PayPal or Stripe link
+          money goes straight to you. Add your own Ko-fi, GitHub Sponsors, PayPal or Stripe link
           and the listing shows a button pointing at it.
         </p>
         <p className="mt-3 leading-relaxed text-text-muted">

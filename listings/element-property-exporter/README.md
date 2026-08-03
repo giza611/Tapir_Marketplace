@@ -34,4 +34,4 @@ value, which matters immediately for any project not in English.
 
 Exporting a very large selection is bounded by how fast Archicad answers
 property requests, not by the script. A whole-building selection can take a
-while — select by storey if you are in a hurry.
+while. Select by storey if you are in a hurry.

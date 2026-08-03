@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { Badge } from '@/components/Badge'
+import { DeleteListingDialog } from '@/components/DeleteListingDialog'
 import { formatCount, formatRelative } from '@/lib/format'
 import type { PendingSubmission } from '@/lib/github'
 import { CATEGORY_LABELS, type ResolvedListing } from '@/lib/schema'
@@ -18,6 +19,8 @@ type Payload = {
 export function Dashboard() {
   const [data, setData] = useState<Payload | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<ResolvedListing | null>(null)
+  const [removed, setRemoved] = useState<{ name: string; url: string } | null>(null)
 
   useEffect(() => {
     fetch('/api/listings/mine')
@@ -42,6 +45,47 @@ export function Dashboard() {
 
   return (
     <div>
+      {removed && (
+        <div className="mb-5 border border-accent bg-accent-subtle p-4 text-[13px]">
+          <p className="font-semibold text-accent-800">Removal submitted</p>
+          <p className="mt-1 leading-relaxed text-accent-900">
+            {removed.name} will disappear from the marketplace once the checks pass, usually within
+            a couple of minutes.{' '}
+            <a
+              href={removed.url}
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2"
+            >
+              Track the pull request
+            </a>
+            .
+          </p>
+        </div>
+      )}
+
+      {pendingDelete && (
+        <DeleteListingDialog
+          listing={pendingDelete}
+          onCancel={() => setPendingDelete(null)}
+          onDeleted={(url) => {
+            setRemoved({ name: pendingDelete.name, url })
+            // Drop it from the table straight away. The listing is still on the
+            // site until the pull request merges, but leaving a row the author
+            // has just deleted invites a confused second attempt.
+            setData((current) =>
+              current
+                ? {
+                    ...current,
+                    live: current.live.filter((item) => item.slug !== pendingDelete.slug),
+                  }
+                : current,
+            )
+            setPendingDelete(null)
+          }}
+        />
+      )}
+
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-[15px]">My scripts</h1>
@@ -155,6 +199,13 @@ export function Dashboard() {
                       >
                         Edit
                       </Link>
+                      <button
+                        type="button"
+                        onClick={() => setPendingDelete(listing)}
+                        className="ml-3 text-[12px] text-text-muted underline underline-offset-2 hover:text-accent-700"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

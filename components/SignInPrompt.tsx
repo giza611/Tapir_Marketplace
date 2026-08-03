@@ -16,7 +16,7 @@ export function SignInPrompt({ configured }: { configured: boolean }) {
         <>
           <p className="mt-3 leading-relaxed text-text-muted">
             Your listings live in a public GitHub repository, so publishing uses your own GitHub
-            account. We ask for <code className="text-sm">public_repo</code> access only — never
+            account. We ask for <code className="text-sm">public_repo</code> access only, never
             access to your private repositories.
           </p>
           <a
@@ -33,7 +33,7 @@ export function SignInPrompt({ configured }: { configured: boolean }) {
         <>
           <p className="mt-3 leading-relaxed text-text-muted">
             This deployment has no GitHub OAuth credentials, so the dashboard is unavailable. The
-            public marketplace works regardless — only publishing needs sign-in.
+            public marketplace works regardless. Only publishing needs sign-in.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-text-subtle">
             To enable it, register an OAuth App on GitHub and set{' '}

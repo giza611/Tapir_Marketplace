@@ -27,7 +27,7 @@ export default function HomePage() {
               Tools the community built
             </h1>
             <p className="mt-5 max-w-[52ch] text-[15px] leading-relaxed text-text-muted">
-              Written by architects who got tired of doing it by hand. Free to download, open to
+              Made by architects. Free to download, open to
               discussion, credited to the people who made them.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">

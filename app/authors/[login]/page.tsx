@@ -170,7 +170,7 @@ export default async function AuthorPage({ params }: Props) {
 
       <p className="mt-6 text-[10.5px] text-text-muted">
         This profile is assembled from {author.login}&rsquo;s published listings. There is no
-        separate account to maintain — <Badge tone="neutral">publishing is membership</Badge>
+        separate account to maintain. <Badge tone="neutral">Publishing is membership</Badge>
       </p>
     </div>
   )

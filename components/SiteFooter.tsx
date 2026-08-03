@@ -45,7 +45,7 @@ export function SiteFooter() {
             Community project. Not affiliated with Graphisoft. Archicad is a trademark of
             Graphisoft SE.
           </p>
-          <p>Scripts are licensed by their authors — review before running.</p>
+          <p>Scripts are licensed by their authors. Review before running.</p>
         </div>
       </div>
     </footer>
