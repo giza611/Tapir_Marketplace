@@ -87,9 +87,11 @@ export function DeleteListingDialog({
 
         <div id="delete-body" className="dialog-body">
           <p>
-            This removes <strong className="text-text">{listing.name}</strong> and all{' '}
-            {listing.versions.length} of its{' '}
-            {listing.versions.length === 1 ? 'version' : 'versions'} from the marketplace.
+            This removes <strong className="text-text">{listing.name}</strong>{' '}
+            {listing.versions.length === 1
+              ? 'and its only version'
+              : `and all ${listing.versions.length} of its versions`}{' '}
+            from the marketplace.
           </p>
           <p className="mt-2">
             It has been downloaded {formatCount(listing.stats.downloads)}{' '}
