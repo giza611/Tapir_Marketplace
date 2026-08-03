@@ -12,6 +12,7 @@ import { ScreenshotGallery } from '@/components/ScreenshotGallery'
 import { VideoEmbed } from '@/components/VideoEmbed'
 import { formatCount, formatDate, formatRelative, prettyUrl } from '@/lib/format'
 import { integrityNotice, isDownloadable } from '@/lib/integrity'
+import { mediaUrl } from '@/lib/media'
 import { getAllListings, getListing } from '@/lib/listings'
 import { CATEGORY_LABELS, type ResolvedListing } from '@/lib/schema'
 import { REPO_URL } from '@/lib/site'
@@ -115,7 +116,13 @@ export default async function ListingPage({ params }: Props) {
           {video && (
             <section className="mb-8">
               <h2 className="label-kicker mb-2.5">Video</h2>
-              <VideoEmbed video={video} title={listing.name} />
+              <VideoEmbed
+                video={video}
+                title={listing.name}
+                fallbackPoster={
+                  listing.media[0] ? mediaUrl(listing.slug, listing.media[0]) : undefined
+                }
+              />
             </section>
           )}
 

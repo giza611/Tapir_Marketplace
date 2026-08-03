@@ -17,6 +17,19 @@ export type ParsedVideo = {
   embedUrl: string
   watchUrl: string
   providerLabel: string
+  /**
+   * Poster frame, when the provider exposes one at a predictable URL.
+   *
+   * YouTube does, so no API call or token is needed. Vimeo does not: its
+   * thumbnails live behind an oEmbed lookup, so a Vimeo listing falls back to
+   * the listing's own first screenshot.
+   *
+   * `fallback` is the lower resolution frame that always exists. `poster` is
+   * the 16:9 one that is missing on older or low quality uploads, so the
+   * component swaps to the fallback if it fails to load.
+   */
+  poster: string | null
+  posterFallback: string | null
 }
 
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{6,20}$/
@@ -70,6 +83,12 @@ function youtube(id: string): ParsedVideo {
     embedUrl: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`,
     watchUrl: `https://www.youtube.com/watch?v=${id}`,
     providerLabel: 'YouTube',
+    // i.ytimg.com is a static image CDN: it serves the frame and sets no
+    // cookies, unlike the player iframe. Requesting it does reveal a visitor to
+    // Google at the network level, which is the cost of showing a real preview
+    // rather than an empty panel.
+    poster: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+    posterFallback: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
   }
 }
 
@@ -80,5 +99,7 @@ function vimeo(id: string): ParsedVideo {
     embedUrl: `https://player.vimeo.com/video/${id}?autoplay=1`,
     watchUrl: `https://vimeo.com/${id}`,
     providerLabel: 'Vimeo',
+    poster: null,
+    posterFallback: null,
   }
 }
