@@ -313,7 +313,9 @@ async function main() {
 
     next[slug] = {
       downloads: downloads ?? previousStats.downloads,
-      reactions: thread?.reactions ?? previousStats.reactions,
+      // THUMBS_UP specifically, not every reaction type: this is the number the
+      // vote button on the listing page adds to, so the two must agree.
+      reactions: thread?.upvotes ?? previousStats.reactions,
       commentCount: thread?.comments ?? previousStats.commentCount,
     }
   }

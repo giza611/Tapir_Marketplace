@@ -13,6 +13,7 @@ import {
   LISTING_TYPES,
   LISTING_TYPE_LABELS,
   PRICING_MODELS,
+  type ListingAuthor,
   type ResolvedListing,
 } from '@/lib/schema'
 
@@ -30,6 +31,12 @@ type Props = {
   /** Absent when creating. */
   initial?: ResolvedListing
   today: string
+  /**
+   * Contact details carried over from the contributor's last listing, or from
+   * their GitHub profile the first time. Only used when creating; an edit
+   * always shows what that listing actually says.
+   */
+  prefillAuthor?: Partial<ListingAuthor>
 }
 
 function slugify(value: string): string {
@@ -40,8 +47,9 @@ function slugify(value: string): string {
     .slice(0, 60)
 }
 
-export function ListingEditor({ login, initial, today }: Props) {
+export function ListingEditor({ login, initial, today, prefillAuthor }: Props) {
   const isEdit = Boolean(initial)
+  const author = initial?.author ?? prefillAuthor
 
   const [name, setName] = useState(initial?.name ?? '')
   const [slug, setSlug] = useState(initial?.slug ?? '')
@@ -52,10 +60,12 @@ export function ListingEditor({ login, initial, today }: Props) {
   const [tags, setTags] = useState(initial?.tags.join(', ') ?? '')
   const [license, setLicense] = useState<string>(initial?.license ?? 'MIT')
 
-  const [authorName, setAuthorName] = useState(initial?.author.name ?? '')
-  const [company, setCompany] = useState(initial?.author.company ?? '')
-  const [email, setEmail] = useState(initial?.author.email ?? '')
-  const [website, setWebsite] = useState(initial?.author.website ?? '')
+  const [authorName, setAuthorName] = useState(author?.name ?? '')
+  const [company, setCompany] = useState(author?.company ?? '')
+  const [city, setCity] = useState(author?.city ?? '')
+  const [email, setEmail] = useState(author?.email ?? '')
+  const [website, setWebsite] = useState(author?.website ?? '')
+  const [bio, setBio] = useState(author?.bio ?? '')
 
   const [repositoryUrl, setRepositoryUrl] = useState(initial?.repositoryUrl ?? '')
   const [homepageUrl, setHomepageUrl] = useState(initial?.homepageUrl ?? '')
@@ -148,8 +158,10 @@ export function ListingEditor({ login, initial, today }: Props) {
       author: {
         name: authorName.trim(),
         ...(company.trim() ? { company: company.trim() } : {}),
+        ...(city.trim() ? { city: city.trim() } : {}),
         ...(email.trim() ? { email: email.trim() } : {}),
         ...(website.trim() ? { website: website.trim() } : {}),
+        ...(bio.trim() ? { bio: bio.trim() } : {}),
       },
       authorGithub: login,
       versions: versions.map((version) => ({
@@ -512,7 +524,14 @@ export function ListingEditor({ login, initial, today }: Props) {
         </label>
       </Section>
 
-      <Section title="About you" hint="Shown on the listing so people know whose work this is.">
+      <Section
+        title="About you"
+        hint={
+          isEdit
+            ? 'Shown on the listing so people know whose work this is.'
+            : 'Carried over from your last listing, so you only fill this in once. Edit it here if anything has changed.'
+        }
+      >
         <Field label="Your name or studio" required>
           <input
             required
@@ -529,6 +548,24 @@ export function ListingEditor({ login, initial, today }: Props) {
               className={inputClass}
             />
           </Field>
+          <Field label="City">
+            <input
+              value={city}
+              onChange={(event) => setCity(event.target.value)}
+              className={inputClass}
+            />
+          </Field>
+        </div>
+        <Field label="Short bio" hint="Shown on your contributor profile.">
+          <textarea
+            rows={2}
+            value={bio}
+            onChange={(event) => setBio(event.target.value)}
+            maxLength={400}
+            className={inputClass}
+          />
+        </Field>
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Email" hint="Optional and public.">
             <input
               type="email"

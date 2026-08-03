@@ -7,6 +7,7 @@ import { Badge } from '@/components/Badge'
 import { Comments } from '@/components/Comments'
 import { archicadRange, priceLabel } from '@/components/ListingCard'
 import { Markdown } from '@/components/Markdown'
+import { RateListing } from '@/components/RateListing'
 import { ScreenshotGallery } from '@/components/ScreenshotGallery'
 import { VideoEmbed } from '@/components/VideoEmbed'
 import { formatCount, formatDate, formatRelative, prettyUrl } from '@/lib/format'
@@ -160,7 +161,7 @@ export default async function ListingPage({ params }: Props) {
 function StatStrip({ listing }: { listing: ResolvedListing }) {
   return (
     <dl className="grid grid-cols-2 border-b-2 border-border-strong sm:grid-cols-4">
-      <StatCell label="Reactions" value={formatCount(listing.stats.reactions)} accent />
+      <StatCell label="Votes" value={formatCount(listing.stats.reactions)} accent />
       <StatCell label="Downloads" value={formatCount(listing.stats.downloads)} />
       <StatCell label="Discussion posts" value={formatCount(listing.stats.commentCount)} />
       <StatCell label="Versions" value={String(listing.versions.length)} />
@@ -231,6 +232,10 @@ function DownloadStack({ listing }: { listing: ResolvedListing }) {
           Contribute, pay what you like
         </a>
       )}
+
+      <div className="mt-3 border-t border-border pt-3">
+        <RateListing slug={listing.slug} initialCount={listing.stats.reactions} />
+      </div>
 
       <p className="mt-2.5 text-[10.5px] leading-relaxed text-text-muted">
         {listing.pricing.note ??
