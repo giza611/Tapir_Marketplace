@@ -4,6 +4,7 @@ import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   consumeOAuthState,
+  consumeReturnPath,
   createSession,
   isAuthConfigured,
 } from '@/lib/auth'
@@ -69,5 +70,8 @@ export async function GET(request: NextRequest) {
     avatarUrl: user.avatar_url,
   })
 
-  return NextResponse.redirect(new URL('/dashboard', request.nextUrl.origin))
+  // Back to whatever they were doing, if anything. The dashboard is only the
+  // right destination when sign-in was not triggered by an action elsewhere.
+  const returnPath = await consumeReturnPath()
+  return NextResponse.redirect(new URL(returnPath ?? '/dashboard', request.nextUrl.origin))
 }

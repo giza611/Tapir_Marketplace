@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-import { GITHUB_CLIENT_ID, isAuthConfigured, issueOAuthState } from '@/lib/auth'
+import {
+  GITHUB_CLIENT_ID,
+  isAuthConfigured,
+  issueOAuthState,
+  rememberReturnPath,
+} from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   if (!isAuthConfigured) {
@@ -12,6 +17,11 @@ export async function GET(request: NextRequest) {
       { status: 503 },
     )
   }
+
+  // Send the visitor back where they were rather than to the dashboard. Without
+  // this, clicking "vote" while signed out sent people through sign-in and then
+  // dropped them somewhere else, losing the action they had just taken.
+  await rememberReturnPath(request.nextUrl.searchParams.get('return'))
 
   const state = await issueOAuthState()
 

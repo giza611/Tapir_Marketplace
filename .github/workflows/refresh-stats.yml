@@ -15,7 +15,14 @@ name: Refresh stats
 
 on:
   schedule:
-    - cron: '17 4 * * *'
+    # Hourly, not daily. The browse grid reads vote and download counts from the
+    # committed stats file, so the gap between someone voting and the number
+    # changing on a card is however long this interval is. A day made voting
+    # feel broken; an hour is short enough to read as "it updated".
+    #
+    # It only commits when something actually changed, so a quiet hour costs a
+    # few API calls and nothing else. Actions minutes are free on public repos.
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:

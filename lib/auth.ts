@@ -118,6 +118,37 @@ export async function issueOAuthState(): Promise<string> {
   return state
 }
 
+const RETURN_COOKIE = 'tm_return'
+
+/**
+ * Remembers where to send someone after signing in.
+ *
+ * Only a same-site path is ever stored. Accepting a full URL here would turn
+ * the sign-in route into an open redirect: an attacker could send a victim to
+ * our own trusted /api/auth/login and have GitHub bounce them onto a phishing
+ * page that looks like it came from us.
+ */
+export async function rememberReturnPath(candidate: string | null): Promise<void> {
+  if (!candidate) return
+  if (!candidate.startsWith('/') || candidate.startsWith('//')) return
+
+  const store = await cookies()
+  store.set(RETURN_COOKIE, candidate, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 600,
+  })
+}
+
+export async function consumeReturnPath(): Promise<string | null> {
+  const store = await cookies()
+  const value = store.get(RETURN_COOKIE)?.value ?? null
+  store.delete(RETURN_COOKIE)
+  return value && value.startsWith('/') && !value.startsWith('//') ? value : null
+}
+
 export async function consumeOAuthState(candidate: string | null): Promise<boolean> {
   const store = await cookies()
   const expected = store.get(STATE_COOKIE)?.value
