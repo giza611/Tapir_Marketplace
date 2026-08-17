@@ -57,14 +57,14 @@ jobs:
       - name: Commit if changed
         id: commit
         run: |
-          if git diff --quiet -- lib/stats.generated.json lib/discussions.generated.json; then
+          if git diff --quiet -- lib/stats.generated.json lib/discussions.generated.json lib/integrity.generated.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Nothing changed; skipping commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/stats.generated.json lib/discussions.generated.json
+          git add lib/stats.generated.json lib/discussions.generated.json lib/integrity.generated.json
           git commit -m "chore: refresh forum index and listing stats"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
