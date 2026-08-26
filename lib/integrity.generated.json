@@ -3,7 +3,7 @@
     "url": "https://www.architools.net/addons/archisum",
     "sha256": "",
     "firstSeen": "2026-08-02",
-    "lastVerified": "2026-08-25",
+    "lastVerified": "2026-08-26",
     "status": "unverified",
     "note": "link points at a web page rather than a file"
   },
@@ -11,28 +11,28 @@
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Win.apx",
     "sha256": "58d88dda7f48e8e17771f063f40ca77848ef87a010d5ef452b8eb32fead2c613",
     "firstSeen": "2026-08-02",
-    "lastVerified": "2026-08-25",
+    "lastVerified": "2026-08-26",
     "status": "verified"
   },
   "element-property-exporter@1.1.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC27_Win.apx",
     "sha256": "b8f2cbd884153975466580cb0567a9251da37bd0ea49fc554aaf4121990bdd6c",
     "firstSeen": "2026-08-02",
-    "lastVerified": "2026-08-25",
+    "lastVerified": "2026-08-26",
     "status": "verified"
   },
   "element-property-exporter@1.0.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC27_Win.apx",
     "sha256": "b8f2cbd884153975466580cb0567a9251da37bd0ea49fc554aaf4121990bdd6c",
     "firstSeen": "2026-08-02",
-    "lastVerified": "2026-08-25",
+    "lastVerified": "2026-08-26",
     "status": "verified"
   },
   "zone-area-auditor@0.9.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Mac.zip",
     "sha256": "f2478e661394954b06f6ef0efbde134e58ed62d335742ea7df250afc7ca74b7f",
     "firstSeen": "2026-08-02",
-    "lastVerified": "2026-08-25",
+    "lastVerified": "2026-08-26",
     "status": "verified"
   }
 }
