@@ -1,0 +1,29 @@
+{
+  "slug": "non-ortho-slab-checker",
+  "name": "Non Ortho Slab Checker",
+  "summary": "It highlights slabs with non orthogonal edges and creates hotspots at areas with errors",
+  "category": "modeling-geometry",
+  "type": "python-script",
+  "tags": [],
+  "author": {
+    "name": "tirthv"
+  },
+  "authorGithub": "boombiome",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "releasedAt": "2026-09-03",
+      "downloadUrl": "https://github.com/boombiome/tapir-scripts/blob/main/Non%20Ortho%20Slab%20Checker.py",
+      "archicadVersions": [
+        "28"
+      ]
+    }
+  ],
+  "media": [],
+  "license": "MIT",
+  "pricing": {
+    "model": "free"
+  },
+  "createdAt": "2026-09-03",
+  "updatedAt": "2026-09-03"
+}
