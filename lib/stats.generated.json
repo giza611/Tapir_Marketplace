@@ -5,17 +5,22 @@
     "commentCount": 1
   },
   "batch-layout-publisher": {
-    "downloads": 647,
+    "downloads": 648,
     "reactions": 0,
     "commentCount": 0
   },
   "element-property-exporter": {
-    "downloads": 1188,
+    "downloads": 1190,
     "reactions": 1,
     "commentCount": 0
   },
+  "non-ortho-slab-checker": {
+    "downloads": 0,
+    "reactions": 0,
+    "commentCount": 0
+  },
   "zone-area-auditor": {
-    "downloads": 549,
+    "downloads": 550,
     "reactions": 1,
     "commentCount": 0
   }

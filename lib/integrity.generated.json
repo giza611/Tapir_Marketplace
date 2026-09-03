@@ -28,6 +28,14 @@
     "lastVerified": "2026-09-03",
     "status": "verified"
   },
+  "non-ortho-slab-checker@1.0.0": {
+    "url": "https://github.com/boombiome/tapir-scripts/blob/main/Non%20Ortho%20Slab%20Checker.py",
+    "sha256": "",
+    "firstSeen": "2026-09-03",
+    "lastVerified": "2026-09-03",
+    "status": "unverified",
+    "note": "link points at a web page rather than a file"
+  },
   "zone-area-auditor@0.9.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Mac.zip",
     "sha256": "f2478e661394954b06f6ef0efbde134e58ed62d335742ea7df250afc7ca74b7f",
