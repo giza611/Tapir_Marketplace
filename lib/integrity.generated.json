@@ -33,8 +33,8 @@
     "sha256": "",
     "firstSeen": "2026-09-03",
     "lastVerified": "2026-10-10",
-    "status": "unverified",
-    "note": "link points at a web page rather than a file"
+    "status": "unreachable",
+    "note": "HTTP 503"
   },
   "zone-area-auditor@0.9.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Mac.zip",
