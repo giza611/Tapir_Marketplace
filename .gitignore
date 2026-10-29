@@ -49,3 +49,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# The MCP server is a separate package with its own dependency tree and a
+# bundled artefact built by mcp/scripts/build.mjs.
+/mcp/node_modules/
+/mcp/dist/

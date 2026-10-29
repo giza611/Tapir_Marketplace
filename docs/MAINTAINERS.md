@@ -32,6 +32,12 @@ If the repository name or owner changes, set `NEXT_PUBLIC_REPO_OWNER` and
 - [ ] giscus IDs generated at <https://giscus.app> and set in the deployment
 - [ ] Optionally, a Vercel Deploy Hook stored as the repository variable
       `VERCEL_DEPLOY_HOOK`, used by the hourly stats job
+- [ ] Optionally, **Device flow** enabled on the GitHub OAuth app, so the MCP
+      server in `mcp/` can sign contributors in without a token to paste. The
+      deployment publishes the app's client ID at `/catalogue.json` for that;
+      it is the public half of the pair, and the device flow uses no secret.
+      Without this, publishing through an assistant needs a personal access
+      token — everything else still works.
 
 **Do not create a Personal Access Token for the deployment.** The forum index
 and download counts come from the hourly Action, which authenticates with the
@@ -51,6 +57,26 @@ with an expiry date is a scheduled outage nobody will be watching for.
 Nothing else needs a human. A submission that passes validation is published
 without anyone looking at it — that is intentional, and the validation is what
 makes it safe.
+
+## Submissions from an assistant
+
+`mcp/` is an MCP server that gives an AI assistant the same publishing route as
+the dashboard. It changes nothing about how submissions are judged: they arrive
+as ordinary pull requests from the contributor's own account and
+`validate-listing.yml` decides, exactly as before.
+
+What it changes is who can be at the keyboard, so two things are worth knowing:
+
+- Pull requests it opens carry `Submitted-Via: tapir-marketplace-mcp <version>`
+  in the body. If a wave of bad submissions ever arrives, that line is how you
+  find out whether they came through it.
+- It caps one author at three open submissions. Nothing else rate-limits
+  publishing, and a looping agent is otherwise free to spend a CI run per
+  attempt.
+
+The server never holds a token of this project's. It cannot publish on its own
+behalf, only as whoever signed in — which is also why CI's author check keeps
+working unchanged.
 
 ## The one file to be careful with
 

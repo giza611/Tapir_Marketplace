@@ -27,13 +27,25 @@ back here. Automated checks validate it and merge it, usually within a couple of
 minutes.
 
 You can also skip the UI entirely and open a pull request adding
-`listings/<your-slug>/listing.json` and `README.md` by hand. Both routes go
-through the same validation.
+`listings/<your-slug>/listing.json` and `README.md` by hand.
+
+Or let an assistant do it: the MCP server in `mcp/` gives Claude and other MCP
+clients tools to search the marketplace and to publish on your behalf, signing
+you in to GitHub with the device flow. See [mcp/README.md](mcp/README.md).
+
+```bash
+claude mcp add tapir-marketplace -- npx -y tapir-marketplace-mcp
+```
+
+All three routes go through the same validation, and all three submit as *you* —
+there is no service account that can publish in someone else's name.
 
 ## Repository layout
 
 ```
 app/                     Next.js App Router pages and API routes
+  catalogue.json/        The whole catalogue as one prerendered file, for clients
+  catalogue/[slug]/      One listing in full, README included
 components/              UI
 lib/
   schema.ts              The listing contract — single source of truth
@@ -48,6 +60,8 @@ scripts/
   validate-listings.ts   The CI gatekeeper — also runnable locally
   refresh-stats.ts       Hourly download counts and reaction totals
   sync-media.mjs         Mirrors listing screenshots into public/
+mcp/                     MCP server: the marketplace as tools for an assistant
+  src/                   Shares lib/schema.ts and lib/github.ts, never copies them
 .github/workflows/       Validation, auto-merge, scheduled stats
 docs/MAINTAINERS.md      Handover runbook
 ```
