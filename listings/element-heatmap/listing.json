@@ -1,0 +1,42 @@
+{
+  "slug": "element-heatmap",
+  "name": "Element Heatmap",
+  "summary": "Colour any elements by any property in plan and 3D. Filter by selection, type, layer or classification, with a live legend.",
+  "category": "quality-assurance",
+  "type": "python-script",
+  "tags": [
+    "heatmap",
+    "properties",
+    "highlight",
+    "visualisation",
+    "model checking",
+    "classification",
+    "layers"
+  ],
+  "author": {
+    "name": "Jorge Beneitez",
+    "company": "Enzyme",
+    "city": "Hong Kong / Singapore / Jakarta / Madrid / Porto"
+  },
+  "authorGithub": "JBENEITEZ",
+  "versions": [
+    {
+      "version": "2.1.2",
+      "releasedAt": "2026-10-29",
+      "changelog": "First release on the marketplace.",
+      "downloadUrl": "https://github.com/ENZYME-APD/enzyme-tapir-scripts/raw/af90b85bf85caff7b09ae352f8fb9237033fe013/releases/element-heatmap-v2.1.2.zip",
+      "archicadVersions": [
+        "30"
+      ],
+      "minTapirVersion": "1.7.3"
+    }
+  ],
+  "media": [],
+  "repositoryUrl": "https://github.com/ENZYME-APD/enzyme-tapir-scripts",
+  "license": "MIT",
+  "pricing": {
+    "model": "free"
+  },
+  "createdAt": "2026-10-29",
+  "updatedAt": "2026-10-29"
+}
