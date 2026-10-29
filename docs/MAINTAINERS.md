@@ -31,10 +31,10 @@ If the repository name or owner changes, set `NEXT_PUBLIC_REPO_OWNER` and
 - [ ] `needs-review` label exists — CI applies it to submissions that fail
 - [ ] giscus IDs generated at <https://giscus.app> and set in the deployment
 - [ ] Optionally, a Vercel Deploy Hook stored as the repository variable
-      `VERCEL_DEPLOY_HOOK`, used by the nightly stats job
+      `VERCEL_DEPLOY_HOOK`, used by the hourly stats job
 
 **Do not create a Personal Access Token for the deployment.** The forum index
-and download counts come from the daily Action, which authenticates with the
+and download counts come from the hourly Action, which authenticates with the
 token GitHub Actions provides automatically, and commits the results to
 `lib/*.generated.json`. The site build reads those files. A PAT would work too,
 right up until it expired — and on a project with no maintainer, a credential
@@ -45,7 +45,7 @@ with an expiry date is a scheduled outage nobody will be watching for.
 | When | What | Where |
 | --- | --- | --- |
 | Every pull request | Validate the listing; auto-merge if it passes | `validate-listing.yml` |
-| 04:17 UTC daily | Refresh download counts and reaction totals, commit, rebuild | `refresh-stats.yml` |
+| :17 past every hour | Refresh download counts and reaction totals, commit, rebuild | `refresh-stats.yml` |
 | Every push to `main` | Rebuild and redeploy the site | Vercel's GitHub integration |
 
 Nothing else needs a human. A submission that passes validation is published
@@ -85,7 +85,7 @@ key; CI compares it against the pull request author.
 self-service. Edit `authorGithub` on `main` yourself, after confirming both
 parties agree.
 
-**The nightly stats job fails.** It is non-critical. Download counts and
+**The hourly stats job fails.** It is non-critical. Download counts and
 reaction totals simply stay at their last known values — the code never
 overwrites good data with zeroes on failure.
 

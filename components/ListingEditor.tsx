@@ -406,7 +406,7 @@ export function ListingEditor({ login, initial, today, prefillAuthor }: Props) {
               <Field
                 label="Download URL"
                 required
-                hint="Any public https link. The file is hashed and re-checked daily, so publish a new version rather than replacing a file in place. GitHub release assets also report download counts."
+                hint="Any public https link. The file is hashed and re-checked every hour, so publish a new version rather than replacing a file in place. GitHub release assets also report download counts."
               >
                 <input
                   required

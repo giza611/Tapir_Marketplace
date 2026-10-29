@@ -68,7 +68,7 @@ export default function AboutPage() {
         <Section title="Safety">
           <p>
             You can host a download anywhere, but every file is fingerprinted the first time it is
-            seen and checked again daily. If the bytes behind a published version change, the
+            seen and checked again every hour. If the bytes behind a published version change, the
             listing is flagged and the download is pulled until the author publishes a genuine new
             version.
           </p>

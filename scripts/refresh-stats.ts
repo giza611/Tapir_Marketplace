@@ -4,7 +4,7 @@
  *   lib/stats.generated.json        download counts, reactions, comment counts
  *   lib/discussions.generated.json  the forum index
  *
- * Run daily by .github/workflows/refresh-stats.yml, which commits both files
+ * Run hourly by .github/workflows/refresh-stats.yml, which commits both files
  * and triggers a rebuild.
  *
  * This is why the site needs no API credential of its own. Inside Actions the
@@ -246,7 +246,7 @@ function readJson<T>(file: string, fallback: T): T {
   }
 }
 
-/** Writes only when the content actually changed, so the daily job produces no empty commits. */
+/** Writes only when the content actually changed, so the hourly job produces no empty commits. */
 function writeIfChanged(file: string, value: unknown): boolean {
   const serialised = `${JSON.stringify(value, null, 2)}\n`
   if (fs.existsSync(file) && fs.readFileSync(file, 'utf8') === serialised) return false

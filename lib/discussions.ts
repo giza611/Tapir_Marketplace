@@ -12,7 +12,7 @@ import path from 'node:path'
  *
  * WHERE THE DATA COMES FROM, and why it matters:
  *
- * The daily GitHub Action fetches Discussions using the token Actions injects
+ * The hourly GitHub Action fetches Discussions using the token Actions injects
  * automatically, and commits the result to `lib/discussions.generated.json`.
  * The site build then reads that file — no API call, no credential, no network.
  *
@@ -379,7 +379,7 @@ export async function setVote(
   )
 }
 
-/** Reads one discussion live. Used for a thread not yet in the daily index. */
+/** Reads one discussion live. Used for a thread not yet in the committed index. */
 export async function fetchDiscussionByNumber(
   token: string,
   owner: string,
@@ -415,7 +415,7 @@ function summarise(discussions: Discussion[]): DiscussionData {
 }
 
 export async function getDiscussions(): Promise<DiscussionData> {
-  // Preferred path: the file the daily Action commits. No network, no secret.
+  // Preferred path: the file the hourly Action commits. No network, no secret.
   try {
     const raw = fs.readFileSync(GENERATED_FILE, 'utf8')
     return summarise(JSON.parse(raw) as Discussion[])

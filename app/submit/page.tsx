@@ -90,7 +90,7 @@ export default function SubmitPage() {
           <Rule>
             <strong className="text-text">Host the download wherever you like</strong>, as long as
             it is a public https link. Every file is hashed the first time it is seen and checked
-            again daily. If the bytes behind a published version change, the listing is flagged
+            again every hour. If the bytes behind a published version change, the listing is flagged
             and the download is pulled until you publish a proper new version. A GitHub release
             asset is still the easiest option, and it is the only one that reports download counts.
           </Rule>

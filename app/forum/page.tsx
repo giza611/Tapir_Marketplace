@@ -48,7 +48,7 @@ export default async function ForumPage() {
 }
 
 /**
- * Reached before the daily job has produced a forum index. The conversation
+ * Reached before the hourly job has produced a forum index. The conversation
  * itself is live on GitHub regardless, so send people there rather than showing
  * a dead end.
  */
@@ -57,7 +57,7 @@ function NotConfigured() {
     <div className="border border-border bg-surface px-6 py-14 text-center">
       <h1 className="text-[20px]">The forum index is not built yet</h1>
       <p className="mx-auto mt-2 max-w-md text-[12px] leading-relaxed text-text-muted">
-        This page mirrors GitHub Discussions, refreshed daily by a scheduled job. It fills in once
+        This page mirrors GitHub Discussions, refreshed hourly by a scheduled job. It fills in once
         Discussions is enabled on the repository and that job has run once.
       </p>
       <a

@@ -4,7 +4,7 @@
  * The marketplace accepts a download link on any host. What makes that safe
  * enough to auto-merge is not vetting the host — it is watching the file.
  *
- * The daily job fetches every published download, hashes it, and records the
+ * The hourly job fetches every published download, hashes it, and records the
  * result here. On the first sighting the hash is simply accepted (the same
  * model SSH uses for host keys). On every later run it is compared. If the
  * bytes behind a published version change, that is the bait-and-switch attack:
@@ -31,6 +31,10 @@ export type IntegrityRecord = {
   sha256: string
   /** ISO date the version was first successfully hashed. */
   firstSeen: string
+  /**
+   * ISO date of the most recent successful check. A date, not a timestamp, so
+   * it moves at most once a day even though the job re-checks every hour.
+   */
   lastVerified: string
   status: IntegrityStatus
   /** Present when status is 'drifted' or 'unreachable'. */
@@ -47,8 +51,8 @@ export function integrityKey(slug: string, version: string): string {
 /**
  * Whether a version may be offered for download.
  *
- * Unverified passes: a brand new listing has not been through the daily job
- * yet, and refusing to serve it for up to a day would make publishing feel
+ * Unverified passes: a brand new listing has not been through the hourly job
+ * yet, and refusing to serve it until the next run would make publishing feel
  * broken. Drift and unreachable both block, because both mean the file a
  * visitor would receive is not the file that was published.
  */

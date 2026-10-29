@@ -46,7 +46,7 @@ listings/<slug>/
   media/                 Screenshots, 500 KB each at most
 scripts/
   validate-listings.ts   The CI gatekeeper — also runnable locally
-  refresh-stats.ts       Daily download counts and reaction totals
+  refresh-stats.ts       Hourly download counts and reaction totals
   sync-media.mjs         Mirrors listing screenshots into public/
 .github/workflows/       Validation, auto-merge, scheduled stats
 docs/MAINTAINERS.md      Handover runbook

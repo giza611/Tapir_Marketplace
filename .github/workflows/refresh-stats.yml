@@ -1,6 +1,6 @@
 name: Refresh stats
 
-# Pulls the forum index, download counts and discussion activity once a day,
+# Pulls the forum index, download counts and discussion activity once an hour,
 # commits the result, and asks Vercel to rebuild. This is what lets a fully
 # static site show live-ish data without a database or a runtime API call.
 #
