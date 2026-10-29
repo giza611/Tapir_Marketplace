@@ -57,7 +57,8 @@ Three things it refuses to do, and will not be talked into:
   against the pull request author, so a mismatch could not merge anyway — but
   it should not become a pull request in the first place.
 - **Touch a listing somebody else owns.** Checked here, and again by CI.
-- **Queue submissions without limit.** Three open at once per author. A person
+- **Queue submissions without limit.** Three open *listing* submissions at once
+  per author; pull requests against the site's own code do not count. A person
   opens one and waits; a loop opens them until something stops it, and each one
   costs the repository a CI run.
 
