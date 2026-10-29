@@ -19,7 +19,7 @@
     {
       "version": "1.0.0",
       "releasedAt": "2026-08-02",
-      "changelog": "added support for",
+      "changelog": "First release on the marketplace.",
       "downloadUrl": "https://www.architools.net/addons/archisum",
       "archicadVersions": [
         "27",
@@ -42,5 +42,5 @@
     "model": "free"
   },
   "createdAt": "2026-08-02",
-  "updatedAt": "2026-08-02"
+  "updatedAt": "2026-10-29"
 }
