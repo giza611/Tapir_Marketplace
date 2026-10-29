@@ -14,6 +14,13 @@
     "lastVerified": "2026-10-29",
     "status": "verified"
   },
+  "element-heatmap@2.1.2": {
+    "url": "https://github.com/ENZYME-APD/enzyme-tapir-scripts/raw/af90b85bf85caff7b09ae352f8fb9237033fe013/releases/element-heatmap-v2.1.2.zip",
+    "sha256": "b91be182c8350931f6d29d37230f27580de42933ba8fdfc96864d82c14de284a",
+    "firstSeen": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "status": "verified"
+  },
   "element-property-exporter@1.1.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC27_Win.apx",
     "sha256": "b8f2cbd884153975466580cb0567a9251da37bd0ea49fc554aaf4121990bdd6c",
