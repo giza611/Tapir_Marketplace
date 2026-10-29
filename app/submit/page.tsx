@@ -76,6 +76,21 @@ export default function SubmitPage() {
         </ol>
       </section>
 
+      <section className="mt-14 border border-border bg-surface-2 p-6">
+        <h2 className="text-lg font-semibold tracking-tight">
+          Rather not fill in a form?
+        </h2>
+        <p className="mt-2.5 leading-relaxed text-text-muted">
+          The marketplace has an MCP server, so Claude or any assistant that speaks the protocol
+          can search these listings and publish yours for you. It goes through the same checks as
+          this form, submitted from your own GitHub account.{' '}
+          <Link href="/mcp" className="text-accent underline underline-offset-2">
+            How to connect it
+          </Link>
+          .
+        </p>
+      </section>
+
       <section className="mt-14">
         <h2 className="text-xl font-semibold tracking-tight">What we ask</h2>
         <ul className="mt-4 space-y-2.5 text-text-muted">
