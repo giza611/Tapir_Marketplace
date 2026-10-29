@@ -20,6 +20,7 @@ export function SiteFooter() {
             <FooterLink href="/">Browse scripts</FooterLink>
             <FooterLink href="/forum">Community forum</FooterLink>
             <FooterLink href="/submit">Publish a script</FooterLink>
+            <FooterLink href="/mcp">Use it from an AI assistant</FooterLink>
           </ul>
         </nav>
 
