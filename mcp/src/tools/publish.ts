@@ -10,6 +10,7 @@ import {
   listPendingSubmissions,
   openPullRequest,
   type FileChange,
+  type PendingSubmission,
 } from '../../../lib/github'
 import { requireCredentials } from '../auth'
 import { getCatalogue, getFullListing, invalidateCatalogue } from '../catalogue'
@@ -37,8 +38,27 @@ import { LISTING_SHAPE } from './validate'
  * something stops it, and each one costs the repository a CI run. Three is
  * enough for a person publishing a few listings in an afternoon and low
  * enough that a runaway caller is a nuisance rather than an outage.
+ *
+ * Only listing submissions count towards it. See `isListingSubmission`.
  */
 const MAX_OPEN_SUBMISSIONS = 3
+
+/**
+ * Whether an open pull request is a listing submission at all.
+ *
+ * `listPendingSubmissions` returns every open pull request the author has
+ * against this repository, because the dashboard lists all of them as pending
+ * and that is the honest thing for a status view to show. Using it unfiltered
+ * as a rate limit was wrong: an author with three open pull requests against
+ * the site's own code could not then publish a listing, which has nothing to
+ * do with the runaway caller the limit exists to slow down.
+ *
+ * A submission is one that touches `listings/`, which is what having a slug
+ * means here.
+ */
+function isListingSubmission(pull: PendingSubmission): boolean {
+  return pull.slugs.length > 0
+}
 
 export function registerPublishTools(server: McpServer): void {
   server.registerTool(
@@ -128,13 +148,14 @@ export function registerPublishTools(server: McpServer): void {
         // One author, a handful of open submissions. Checked before the fork so
         // a runaway caller does not leave debris behind either.
         const pending = await listPendingSubmissions(credentials.token, credentials.login)
-        if (pending.length >= MAX_OPEN_SUBMISSIONS) {
+        const open = pending.filter(isListingSubmission)
+        if (open.length >= MAX_OPEN_SUBMISSIONS) {
           throw new MarketplaceError(
             [
-              `@${credentials.login} already has ${pending.length} open submissions to ` +
+              `@${credentials.login} already has ${open.length} open listing submissions to ` +
                 `${TARGET_REPO}, which is the limit.`,
               '',
-              ...pending.map((item) => `  #${item.number} ${item.title} — ${item.url}`),
+              ...open.map((item) => `  #${item.number} ${item.title} — ${item.url}`),
               '',
               'Wait for those to merge, or close one, before submitting another.',
             ].join('\n'),
@@ -252,7 +273,9 @@ export function registerPublishTools(server: McpServer): void {
                 `  #${item.number} ${item.title}`,
                 `    ${item.url}`,
                 `    opened ${item.createdAt.slice(0, 10)}` +
-                  (item.slugs.length > 0 ? ` · ${item.slugs.join(', ')}` : '') +
+                  (isListingSubmission(item)
+                    ? ` · ${item.slugs.join(', ')}`
+                    : ' · not a listing: does not count toward the publishing limit') +
                   (item.needsReview ? ' · needs a maintainer: a check did not pass' : ''),
               ].join('\n'),
             ),
