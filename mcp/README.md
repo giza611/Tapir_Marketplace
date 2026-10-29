@@ -94,13 +94,14 @@ marketplace's own `/catalogue.json`. A deployment publishes it there whenever
 one that already travels in every sign-in URL, and the device flow uses no
 secret at all.
 
-Two things have to be true on the GitHub OAuth app for this to work:
+Both conditions hold on the marketplace's own deployment, so `sign_in` works
+out of the box. A fork needs them arranged itself:
 
-1. **Device flow is enabled** — a checkbox in the app's settings.
-2. The deployment has `GITHUB_CLIENT_ID` set, which it already needs for the
+1. **Device flow enabled** — a checkbox in the OAuth app's settings.
+2. `GITHUB_CLIENT_ID` set on the deployment, which it already needs for the
    dashboard.
 
-Where neither holds, `sign_in` says so and points at `TAPIR_GITHUB_TOKEN`.
+Where either is missing, `sign_in` says so and points at `TAPIR_GITHUB_TOKEN`.
 
 The token is written to `~/.tapir-marketplace/credentials.json` with `0600`
 permissions where the platform has them. `sign_out` deletes it; revoking it
