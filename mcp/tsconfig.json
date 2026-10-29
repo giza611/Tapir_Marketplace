@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    /*
+     * One Zod, not two.
+     *
+     * This package has its own copy, because it is published and installed on
+     * its own; ../lib resolves the repository's. Left alone, a schema built by
+     * one instance cannot be handed to a function from the other — the two
+     * disagree about their own internals, and `z.toJSONSchema(listingSchema)`
+     * stops compiling. Point both at the repository's copy for building; at
+     * runtime `zod` stays external and resolves to this package's dependency.
+     */
+    "paths": {
+      "zod": ["../node_modules/zod"],
+      "zod/*": ["../node_modules/zod/*"]
+    }
+  },
+  /*
+   * Only src/ is listed. tsc follows the imports from there into ../lib, which
+   * is the point: the server shares the site's schema and GitHub plumbing
+   * rather than keeping a copy, so a change to either is a type error here.
+   */
+  "include": ["src/**/*.ts"]
+}

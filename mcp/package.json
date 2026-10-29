@@ -1,0 +1,33 @@
+{
+  "name": "tapir-marketplace-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the Tapir Scripts Marketplace \u2014 search listings and publish your own from an AI assistant.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "tapir-marketplace-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@octokit/rest": "^22.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "esbuild": "^0.25.10",
+    "typescript": "^5"
+  }
+}
