@@ -108,7 +108,15 @@ properly is done in GitHub's account settings.
 
 ## Publishing a release
 
-Always from the repository root, naming this folder:
+`prepublishOnly` typechecks and builds, so both dependency trees have to be
+installed first — the root one as well, because the typecheck follows imports
+into `../lib`. A fresh clone has neither:
+
+```bash
+npm install && npm install --prefix mcp
+```
+
+Then, always from the repository root, naming this folder:
 
 ```bash
 npm publish ./mcp --dry-run
