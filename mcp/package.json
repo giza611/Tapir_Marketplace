@@ -1,8 +1,26 @@
 {
   "name": "tapir-marketplace-mcp",
   "version": "0.1.0",
-  "description": "MCP server for the Tapir Scripts Marketplace \u2014 search listings and publish your own from an AI assistant.",
+  "description": "MCP server for the Tapir Scripts Marketplace — search Archicad automation listings and publish your own from an AI assistant.",
   "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "archicad",
+    "tapir",
+    "bim",
+    "marketplace",
+    "automation"
+  ],
+  "homepage": "https://github.com/giza611/Tapir_Marketplace/tree/main/mcp#readme",
+  "bugs": {
+    "url": "https://github.com/giza611/Tapir_Marketplace/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giza611/Tapir_Marketplace.git",
+    "directory": "mcp"
+  },
   "type": "module",
   "bin": {
     "tapir-marketplace-mcp": "dist/index.js"
@@ -18,7 +36,8 @@
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "prepublishOnly": "npm run typecheck && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
