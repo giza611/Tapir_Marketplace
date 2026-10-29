@@ -129,7 +129,7 @@ export const LIMITS = {
  * A listing could pass review pointing at a clean asset and be swapped for a
  * malicious one the next day, on any host.
  *
- * What replaced it is integrity monitoring (see lib/integrity.ts): the daily
+ * What replaced it is integrity monitoring (see lib/integrity.ts): the hourly
  * job records a SHA-256 of every download on first sight and re-verifies it.
  * If a file changes without a new version being published, the listing is
  * flagged and its download hidden. That catches the swap attack the allowlist
@@ -344,7 +344,7 @@ export type ResolvedListing = Listing & {
   stats: ListingStats
   /**
    * Download integrity per version string, from lib/integrity.generated.json.
-   * Empty until the daily job has seen this listing. See lib/integrity.ts.
+   * Empty until the hourly job has seen this listing. See lib/integrity.ts.
    */
   integrity: Record<string, IntegrityRecord>
 }

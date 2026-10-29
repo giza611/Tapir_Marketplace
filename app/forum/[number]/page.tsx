@@ -45,7 +45,7 @@ export default async function ThreadPage({ params }: Props) {
 
   let thread = discussions.find((d) => String(d.number) === number)
 
-  // A topic posted from this site will not be in the daily index yet. The
+  // A topic posted from this site will not be in the committed index yet. The
   // author is signed in at that moment, so read it live with their token
   // rather than showing them a 404 for the thread they just created.
   if (!thread && /^\d+$/.test(number)) {

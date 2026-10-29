@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       content,
     )
 
-    // The forum index is a static file refreshed daily, so a new topic will not
+    // The forum index is a static file refreshed hourly, so a new topic will not
     // appear in the list until the next run. Nudge a rebuild when a deploy hook
     // is configured; the thread itself is readable immediately either way.
     const hook = process.env.VERCEL_DEPLOY_HOOK

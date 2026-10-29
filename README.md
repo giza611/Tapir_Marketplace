@@ -58,7 +58,7 @@ listings/<slug>/
   media/                 Screenshots, 500 KB each at most
 scripts/
   validate-listings.ts   The CI gatekeeper — also runnable locally
-  refresh-stats.ts       Daily download counts and reaction totals
+  refresh-stats.ts       Hourly download counts and reaction totals
   sync-media.mjs         Mirrors listing screenshots into public/
 mcp/                     MCP server: the marketplace as tools for an assistant
   src/                   Shares lib/schema.ts and lib/github.ts, never copies them
