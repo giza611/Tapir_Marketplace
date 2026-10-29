@@ -106,6 +106,42 @@ The token is written to `~/.tapir-marketplace/credentials.json` with `0600`
 permissions where the platform has them. `sign_out` deletes it; revoking it
 properly is done in GitHub's account settings.
 
+## Publishing a release
+
+Always from the repository root, naming this folder:
+
+```bash
+npm publish ./mcp --dry-run
+```
+
+**Not `npm --prefix mcp publish`.** `--prefix` only moves `node_modules`
+resolution; `publish` still packs the current directory. Run from the root it
+packs the whole site instead — 389 files, both git worktrees and
+`.claude/settings.local.json` — and reports success, because `npm publish
+--dry-run` does not honour the `"private": true` that would stop a real publish.
+A dry run is therefore not a safety net against being in the wrong directory.
+Check the name it prints:
+
+```
+npm notice name: tapir-marketplace-mcp     <- this package
+npm notice name: tapir-marketplace         <- the website; stop
+```
+
+A correct run is four files and about 53 kB: `README.md`, `dist/index.js`,
+`dist/index.js.map`, `package.json`. If `dist/index.js` is missing, the build
+did not run — `prepublishOnly` should have made that impossible, so find out
+why before going further.
+
+Then, with the same arguments:
+
+```bash
+npm publish ./mcp
+```
+
+The name and the version number are both permanent once this succeeds.
+Unpublishing is only possible within 72 hours, and a version number can never
+be reused even then.
+
 ## Development
 
 This package shares the site's code rather than copying it:
