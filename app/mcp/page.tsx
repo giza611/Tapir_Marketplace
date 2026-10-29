@@ -96,35 +96,38 @@ export default function McpPage() {
             submission from the account that owns it. So the server has to act as you.
           </p>
           <p>
-            Today that means giving it a token. Create a{' '}
+            You do not have to paste a token anywhere. Ask your assistant to sign you in and it
+            answers with a short code:
+          </p>
+          <Code>{`Ask the author to finish signing in to GitHub:
+
+  1. Open https://github.com/login/device
+  2. Enter the code:  6C53-6C90`}</Code>
+          <p>
+            Open that page, type the code, approve the request, and tell the assistant to carry
+            on. GitHub hands it a token limited to public repositories, which it keeps on your own
+            machine and nowhere else. Ask it to sign out whenever you want the token deleted;
+            revoking it outright is done in your{' '}
             <a
-              href="https://github.com/settings/tokens/new?scopes=public_repo&description=Tapir%20marketplace%20MCP"
+              href="https://github.com/settings/applications"
               target="_blank"
               rel="noreferrer"
               className="text-accent-700 underline underline-offset-2"
             >
-              personal access token
-            </a>{' '}
-            with the <Mono>public_repo</Mono> scope and nothing else, then add it to the same
-            config block:
-          </p>
-          <Code>{`{
-  "mcpServers": {
-    "tapir-marketplace": {
-      "command": "npx",
-      "args": ["-y", "${PACKAGE}"],
-      "env": { "TAPIR_GITHUB_TOKEN": "your-token-here" }
-    }
-  }
-}`}</Code>
-          <p>
-            That token can only touch public repositories, and you can revoke it from GitHub at any
-            time. Treat it like a password otherwise &mdash; anyone holding it can publish as you.
+              GitHub account settings
+            </a>
+            .
           </p>
           <p>
-            From there, ask your assistant to publish. It will open a pull request from your
-            account; the same checks that review a submission from the website review this one, and
-            merge it within a couple of minutes if it passes.
+            From there, ask it to publish. It opens a pull request from your account; the same
+            checks that review a submission from the website review this one, and merge it within
+            a couple of minutes if it passes.
+          </p>
+          <p className="border-l-2 border-border-strong pl-4 text-[12.5px]">
+            Running something unattended instead, or would rather manage the credential yourself?
+            Set <Mono>TAPIR_GITHUB_TOKEN</Mono> in the server&rsquo;s environment to a personal
+            access token with the <Mono>public_repo</Mono> scope, and it will use that without
+            asking anyone to sign in.
           </p>
         </Section>
 
