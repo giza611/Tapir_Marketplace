@@ -19,7 +19,8 @@
     "sha256": "b91be182c8350931f6d29d37230f27580de42933ba8fdfc96864d82c14de284a",
     "firstSeen": "2026-10-29",
     "lastVerified": "2026-11-09",
-    "status": "verified"
+    "status": "unreachable",
+    "note": "HTTP 504"
   },
   "element-property-exporter@1.1.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC27_Win.apx",
@@ -40,14 +41,15 @@
     "sha256": "",
     "firstSeen": "2026-09-03",
     "lastVerified": "2026-11-09",
-    "status": "unverified",
-    "note": "link points at a web page rather than a file"
+    "status": "unreachable",
+    "note": "HTTP 504"
   },
   "zone-area-auditor@0.9.0": {
     "url": "https://github.com/ENZYME-APD/tapir-archicad-automation/releases/download/1.5.7/TapirAddOn_AC28_Mac.zip",
     "sha256": "f2478e661394954b06f6ef0efbde134e58ed62d335742ea7df250afc7ca74b7f",
     "firstSeen": "2026-08-02",
     "lastVerified": "2026-11-09",
-    "status": "verified"
+    "status": "unreachable",
+    "note": "HTTP 504"
   }
 }
